@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.ieeervce.api.siterearnouveau.entity.Image;
 import org.ieeervce.api.siterearnouveau.repository.ImageRepository;
+import org.ieeervce.api.siterearnouveau.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class ImagesController {
 
     @Autowired
-    ImageRepository imageRepository;
+    ImageService imageService;
 
     @GetMapping
     public @ResponseBody List<Image> list() {
-        return imageRepository.findAll();
+        return imageService.list();
     }
 
     @GetMapping("/{iid}")
     public ResponseEntity<byte[]> get(@PathVariable int iid) throws Exception {
-        byte[] image = imageRepository.findById(iid).map(Image::getImage).orElseThrow(() -> new Exception("Not found"));
+        byte[] image = imageService.getBytesByImageId(iid).orElseThrow(() -> new Exception("Not found"));
 
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(image);
     }

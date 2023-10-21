@@ -1,6 +1,5 @@
 package org.ieeervce.api.siterearnouveau.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.JdbcTypeCode;
