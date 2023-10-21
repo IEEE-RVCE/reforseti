@@ -27,3 +27,7 @@ Note: This is currently a **POC**. This is **not** intended to replace the curre
 - Connect to local DB with `ssh -L 5442:localhost:5442 -N ssh_helper@machine.ieee-rvce.org`
 - Use any IDE - VSCode/IntelliJ
 - Start the project with `./gradlew bootRun`
+
+## Current Implementation Notes ~~Hacks~~
+
+- For authentication, it is currently an **In memory** list of users. Refer [`SecurityConfig`](./src/main/java/org/ieeervce/api/siterearnouveau/config/SecurityConfig.java)
