@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/events")
+@RequestMapping("/api/event")
 public class EventsController {
     @Autowired
     EventsRepository eventsRepository;

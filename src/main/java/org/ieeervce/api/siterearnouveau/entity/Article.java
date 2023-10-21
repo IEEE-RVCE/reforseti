@@ -22,7 +22,7 @@ public class Article {
     private String author;
 
     @Column(name="adate")
-    private LocalDateTime localDateTime;
+    private LocalDateTime addedDateTime;
 
     @Column
     String content;

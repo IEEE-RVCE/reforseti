@@ -3,7 +3,6 @@ package org.ieeervce.api.siterearnouveau.controller;
 import java.util.List;
 
 import org.ieeervce.api.siterearnouveau.entity.Image;
-import org.ieeervce.api.siterearnouveau.repository.ImageRepository;
 import org.ieeervce.api.siterearnouveau.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
