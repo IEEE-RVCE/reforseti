@@ -17,6 +17,11 @@ public class ImageService {
         return imageRepository.findAll();
     }
 
+    /**
+     * Get the bytes of an image by its ID.
+     * @param imageId Image ID
+     * @return Optional representing bytes of the image if present. 
+     */
     public Optional<byte[]> getBytesByImageId(int imageId){
         return imageRepository.findById(imageId).map(Image::getImage);
     }
