@@ -27,6 +27,7 @@ public class SecurityConfig {
 
     @Bean
     UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+        // FIXME fix user details
         UserDetails user1 = User
                 .builder()
 
@@ -36,6 +37,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        // FIXME re-enable csrf and cors
         httpSecurity.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
                 .authorizeHttpRequests(getHttpAuthorizationCustomizer())
