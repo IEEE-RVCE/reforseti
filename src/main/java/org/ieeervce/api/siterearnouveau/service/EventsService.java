@@ -3,17 +3,17 @@ package org.ieeervce.api.siterearnouveau.service;
 import java.util.List;
 
 import org.ieeervce.api.siterearnouveau.entity.Article;
-import org.ieeervce.api.siterearnouveau.repository.ArticleRepository;
+import org.ieeervce.api.siterearnouveau.repository.ArticlesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EventsService {
     @Autowired
-    ArticleRepository articleRepository;
+    ArticlesRepository articlesRepository;
 
 
     public List<Article> list(){
-        return articleRepository.findAll();
+        return articlesRepository.findAll();
     }
 }

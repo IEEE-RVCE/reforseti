@@ -6,7 +6,7 @@ import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
 import org.ieeervce.api.siterearnouveau.entity.Image;
-import org.ieeervce.api.siterearnouveau.repository.ImageRepository;
+import org.ieeervce.api.siterearnouveau.repository.ImagesRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ImagesServiceTest {
     @Mock
-    ImageRepository imageRepository;
+    ImagesRepository imageRepository;
 
     @InjectMocks
     ImageService imageService;

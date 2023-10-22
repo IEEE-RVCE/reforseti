@@ -4,17 +4,17 @@ import java.util.List;
 import java.util.Optional;
 
 import org.ieeervce.api.siterearnouveau.entity.Image;
-import org.ieeervce.api.siterearnouveau.repository.ImageRepository;
+import org.ieeervce.api.siterearnouveau.repository.ImagesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ImageService {
     @Autowired
-    ImageRepository imageRepository;
+    ImagesRepository imagesRepository;
 
     public List<Image> list(){
-        return imageRepository.findAll();
+        return imagesRepository.findAll();
     }
 
     /**
@@ -23,6 +23,6 @@ public class ImageService {
      * @return Optional representing bytes of the image if present. 
      */
     public Optional<byte[]> getBytesByImageId(int imageId){
-        return imageRepository.findById(imageId).map(Image::getImage);
+        return imagesRepository.findById(imageId).map(Image::getImage);
     }
 }
