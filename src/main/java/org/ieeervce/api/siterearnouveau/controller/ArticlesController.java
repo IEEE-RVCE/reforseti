@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.entity.Article;
-import org.ieeervce.api.siterearnouveau.repository.ArticlesRepository;
 import org.ieeervce.api.siterearnouveau.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
