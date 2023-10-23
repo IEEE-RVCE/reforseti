@@ -12,7 +12,11 @@ public class ArticleService {
     @Autowired
     ArticlesRepository articlesRepository;
 
-    public List<Article> list(){
+    public List<Article> list() {
         return articlesRepository.findAll();
+    }
+
+    public Article getArticleById(Integer id) {
+        return articlesRepository.findById(id).orElse(null);
     }
 }
