@@ -19,4 +19,23 @@ public class ArticleService {
     public Article getArticleById(Integer id) {
         return articlesRepository.findById(id).orElse(null);
     }
+
+    public Boolean saveArticle(Article article) {
+        try {
+            articlesRepository.save(article);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("Error while saving article", e);
+        }
+    }
+
+    public Boolean deleteArticle(Integer id) {
+        try {
+            articlesRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete article", e);
+        }
+    }
+
 }
