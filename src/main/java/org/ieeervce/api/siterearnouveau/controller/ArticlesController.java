@@ -3,8 +3,10 @@ package org.ieeervce.api.siterearnouveau.controller;
 import java.util.List;
 
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
+import org.ieeervce.api.siterearnouveau.dto.article.ArticleDTO;
 import org.ieeervce.api.siterearnouveau.entity.Article;
 import org.ieeervce.api.siterearnouveau.service.ArticleService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ArticlesController {
     @Autowired
     ArticleService articleService;
+    @Autowired
+    ModelMapper modelMapper;
 
     @GetMapping()
     ResultsDTO<List<Article>> list() {
@@ -33,7 +37,8 @@ public class ArticlesController {
     }
 
     @PostMapping()
-    ResultsDTO<Boolean> saveArticle(@RequestBody Article article) {
+    ResultsDTO<Boolean> saveArticle(@RequestBody ArticleDTO articleDTO) {
+        Article article = modelMapper.map(articleDTO, Article.class);
         var result = articleService.saveArticle(article);
         return new ResultsDTO<>(result);
     }
