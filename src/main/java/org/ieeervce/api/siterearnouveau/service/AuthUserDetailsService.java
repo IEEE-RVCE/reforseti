@@ -1,0 +1,37 @@
+package org.ieeervce.api.siterearnouveau.service;
+
+import java.util.function.Supplier;
+
+import org.ieeervce.api.siterearnouveau.auth.AuthUserDetails;
+import org.ieeervce.api.siterearnouveau.entity.User;
+import org.ieeervce.api.siterearnouveau.repository.UsersRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+/**
+ * Fetch user by username, from DB table
+ */
+@Service
+public class AuthUserDetailsService implements UserDetailsService {
+	private static final Supplier<UsernameNotFoundException> EXCEPTION_SUPPLIER = () -> new UsernameNotFoundException(
+			"Username not found");
+	@Autowired
+	UsersRepository usersRepository;
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Integer userid;
+		try {
+			userid = Integer.valueOf(username);
+		} catch (NumberFormatException e) {
+			throw new UsernameNotFoundException("Not a valid username");
+		}
+		User user = usersRepository.findById(userid).orElseThrow(EXCEPTION_SUPPLIER);
+
+		return new AuthUserDetails(user);
+	}
+
+}

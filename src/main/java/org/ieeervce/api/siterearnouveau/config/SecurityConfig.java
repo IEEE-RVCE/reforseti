@@ -19,20 +19,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+    /**
+     * Password encoder to use for decoding and encoding passwords.
+     * <p>
+     * Using Bcrypt as it is the existing password encoder.
+     * @return Bcrypt password encoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        // FIXME fix user details
-        UserDetails user1 = User
-                .builder()
-
-                .username("hello").password(passwordEncoder.encode("abcd")).build();
-        return new InMemoryUserDetailsManager(Arrays.asList(user1));
     }
 
     @Bean
