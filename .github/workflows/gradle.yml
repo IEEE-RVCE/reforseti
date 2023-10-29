@@ -38,6 +38,11 @@ jobs:
         jacoco-csv-file: build/reports/jacoco/test/jacocoTestReport.csv
         intervals: 100 90 80 70 60 0
         fail-if-coverage-less-than: 0
+    - name: Check artifacts
+      run: |
+        ls -l target
+        ls -l target/site
+        ls -l target/site/jacoco/
     - name: Upload JaCoCo coverage report
       uses: actions/upload-artifact@v2
       with:
