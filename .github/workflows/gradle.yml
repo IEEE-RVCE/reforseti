@@ -36,4 +36,6 @@ jobs:
       uses: cicirello/jacoco-badge-generator@v2.11.0
       with:
         jacoco-csv-file: build/reports/jacoco/test/jacocoTestReport.csv
+        intervals: 100 90 80 70 60 0
+        fail-if-coverage-less-than: 0
             
