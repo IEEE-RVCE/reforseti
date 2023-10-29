@@ -40,9 +40,7 @@ jobs:
         fail-if-coverage-less-than: 0
     - name: Check artifacts
       run: |
-        ls -l target
-        ls -l target/site
-        ls -l target/site/jacoco/
+        ls -l .
     - name: Upload JaCoCo coverage report
       uses: actions/upload-artifact@v2
       with:
