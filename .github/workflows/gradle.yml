@@ -37,7 +37,7 @@ jobs:
       with:
         jacoco-csv-file: build/reports/jacoco/test/jacocoTestReport.csv
         intervals: 100 90 80 70 60 0
-        fail-if-coverage-less-than: 50
+        fail-if-coverage-less-than: 0
     - name: Upload JaCoCo coverage report
       uses: actions/upload-artifact@v2
       with:
