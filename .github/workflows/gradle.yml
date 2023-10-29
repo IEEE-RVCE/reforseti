@@ -42,11 +42,15 @@ jobs:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
         restore-keys: ${{ runner.os }}-gradle
-    - name: Build and analyze
+    - name: Build
+      run: ./gradlew build
+    - name: Test and Coverage report
+      run: ./gradlew jacocoTestReport
+    - name: Analyze
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew build jacocoTestReport sonar --info
+      run: ./gradlew sonar --info
     - name: jacoco-badge-generator
       uses: cicirello/jacoco-badge-generator@v2.11.0
       with:
