@@ -30,4 +30,5 @@ Note: This is currently a **POC**. This is **not** intended to replace the curre
 
 ## Current Implementation Notes ~~Hacks~~
 
-- For authentication, it is currently an **In memory** list of users. Refer [`SecurityConfig`](./src/main/java/org/ieeervce/api/siterearnouveau/config/SecurityConfig.java)
+- No JWT Auth. Only Basic auth is supported.
+- CORS is disabled.
