@@ -52,4 +52,10 @@ class AuthUserDetailsTest {
         verify(user).getRole();
     }
 
+    @Test
+    void testCredentialsWipe(){
+        authUserDetails.eraseCredentials();
+        verify(user).setPassword(null);
+    }
+
 }
