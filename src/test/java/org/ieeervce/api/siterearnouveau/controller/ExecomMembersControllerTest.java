@@ -30,7 +30,8 @@ class ExecomMembersControllerTest {
 
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(execomMembersController)
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(execomMembersController)
                 .build();
     }
 
