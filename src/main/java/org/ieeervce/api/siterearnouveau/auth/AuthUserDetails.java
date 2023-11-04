@@ -70,7 +70,4 @@ public class AuthUserDetails implements UserDetails, CredentialsContainer {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 }
