@@ -16,7 +16,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 class AuthUserDetailsTest {
 
     private static final String EXAMPLE_ROLE = "EXAMPLE_ROLE";
-    private static final String USER_EMAIL = "abc@example.com";
     private static final int USER_ID = 123;
     private static final String USER_PASSWORD = "strong_password";
     @Mock
