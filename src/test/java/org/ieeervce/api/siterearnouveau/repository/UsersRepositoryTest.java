@@ -48,4 +48,49 @@ class UsersRepositoryTest {
         assertThat(createdUser.getPassword()).isEqualTo(PASSWORD);
         assertThat(createdUser.getSocietyId()).isNull();
     }
+
+    @Test
+    void testUserEquality(){
+        var user = new User();
+        user.setEmail(EMAIL);
+        user.setFirstName(FIRSTNAME);
+        user.setLastName(LASTNAME);
+        user.setRole(ROLE);
+        user.setPicture(PICTURE);
+        user.setSocietyId(null);
+        user.setPassword(PASSWORD);
+
+        var user2 = new User();
+        user2.setEmail(EMAIL);
+        user2.setFirstName(FIRSTNAME);
+        user2.setLastName(LASTNAME);
+        user2.setRole(ROLE);
+        user2.setPicture(PICTURE);
+        user2.setSocietyId(null);
+        user2.setPassword(PASSWORD);
+
+        assertThat(user).isEqualTo(user2);
+    }
+    @Test
+    void testUserInequality(){
+        var user = new User();
+        user.setEmail(EMAIL+1);
+        user.setFirstName(FIRSTNAME);
+        user.setLastName(LASTNAME);
+        user.setRole(ROLE);
+        user.setPicture(PICTURE);
+        user.setSocietyId(null);
+        user.setPassword(PASSWORD);
+
+        var user2 = new User();
+        user2.setEmail(EMAIL);
+        user2.setFirstName(FIRSTNAME);
+        user2.setLastName(LASTNAME);
+        user2.setRole(ROLE);
+        user2.setPicture(PICTURE);
+        user2.setSocietyId(null);
+        user2.setPassword(PASSWORD);
+
+        assertThat(user).isNotEqualTo(user2);
+    }
 }
