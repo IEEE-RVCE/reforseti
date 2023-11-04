@@ -13,21 +13,19 @@ import jakarta.transaction.Transactional;
 @SpringBootTest()
 @ActiveProfiles("test")
 class UsersRepositoryTest {
-    
+
     private static final String PASSWORD = "password";
-    private static final byte[] PICTURE = new byte[]{1,2,3};
+    private static final byte[] PICTURE = new byte[] { 1, 2, 3 };
     private static final String ROLE = "EXAMPLE_ROLE";
     private static final String LASTNAME = "CDE";
     private static final String FIRSTNAME = "ABC";
     private static final String EMAIL = "abc@example.com";
     @Autowired
     UsersRepository usersRepository;
-    
 
-    
     @Test
     @Transactional
-    void saveUserWorks(){
+    void saveUserWorks() {
         var user = new User();
         user.setEmail(EMAIL);
         user.setFirstName(FIRSTNAME);
@@ -50,7 +48,7 @@ class UsersRepositoryTest {
     }
 
     @Test
-    void testUserEquality(){
+    void testUserEquality() {
         var user = new User();
         user.setEmail(EMAIL);
         user.setFirstName(FIRSTNAME);
@@ -70,11 +68,13 @@ class UsersRepositoryTest {
         user2.setPassword(PASSWORD);
 
         assertThat(user).isEqualTo(user2);
+        assertThat(user).hasSameHashCodeAs(user2);
     }
+
     @Test
-    void testUserInequality(){
+    void testUserInequality() {
         var user = new User();
-        user.setEmail(EMAIL+1);
+        user.setEmail(EMAIL + 1);
         user.setFirstName(FIRSTNAME);
         user.setLastName(LASTNAME);
         user.setRole(ROLE);
@@ -92,5 +92,22 @@ class UsersRepositoryTest {
         user2.setPassword(PASSWORD);
 
         assertThat(user).isNotEqualTo(user2);
+        assertThat(user.hashCode()).isNotEqualTo(user2.hashCode());
+    }
+
+    @Test
+    void testToStringWorks() {
+        var user = new User();
+        user.setEmail(EMAIL + 1);
+        user.setFirstName(FIRSTNAME);
+        user.setLastName(LASTNAME);
+        user.setRole(ROLE);
+        user.setPicture(PICTURE);
+        user.setSocietyId(null);
+        user.setPassword(PASSWORD);
+        assertThat(user.toString())
+            .isNotNull().isInstanceOf(String.class)
+            .contains(EMAIL,FIRSTNAME,LASTNAME,ROLE)
+            .doesNotContain("password","picture");
     }
 }
