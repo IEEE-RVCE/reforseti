@@ -25,9 +25,25 @@ Note: This is currently a **POC**. This is **not** intended to replace the curre
 
 - Install Java **17**. SDKMan is a good way to start.
 - Connect to local DB with `ssh -L 5442:localhost:5442 -N ssh_helper@machine.ieee-rvce.org`
-- Use any IDE - VSCode/IntelliJ
-- Start the project with `./gradlew bootRun`
+- Copy and put `application-local.properties` into `src/main/resources`. It will have local DB configurations
+- Use any IDE - VSCode/IntelliJ.
+  - VSCode: Add the following configuration to `launch.json` under the `configurations` array:
+    ```jsonc
+    {
+        "type": "java",
+        "name": "SiteRearNouveauApplication",
+        "request": "launch",
+        "mainClass": "org.ieeervce.api.siterearnouveau.SiteRearNouveauApplication",
+        "projectName": "site-rear-nouveau",
+        "env": {
+            "SPRING_PROFILES_ACTIVE": "local"
+        }
+    }
+    ```
+  - IntelliJ: Set the active profiles to `local`
+- Start the project with `SPRING_PROFILES_ACTIVE=local ./gradlew bootRun`
 
 ## Current Implementation Notes ~~Hacks~~
 
-- For authentication, it is currently an **In memory** list of users. Refer [`SecurityConfig`](./src/main/java/org/ieeervce/api/siterearnouveau/config/SecurityConfig.java)
+- No JWT Auth. Only Basic auth is supported.
+- CORS is disabled.

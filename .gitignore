@@ -1,6 +1,7 @@
 ### Custom ###
 .env
 *.rest
+src/main/resources/application-local.properties
 
 ### General ###
 
