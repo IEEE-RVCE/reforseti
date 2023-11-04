@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Table(name="users")
@@ -30,9 +31,11 @@ public class User {
     String email;
     
     @Column(name = "pic")
+    @ToString.Exclude
     byte[] picture;
 
     @Column(name = "pwd")
+    @ToString.Exclude
     String password;
 
     @Column
