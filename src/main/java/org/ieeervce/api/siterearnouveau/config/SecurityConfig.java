@@ -1,6 +1,5 @@
 package org.ieeervce.api.siterearnouveau.config;
 
-import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -8,12 +7,9 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -23,6 +19,7 @@ public class SecurityConfig {
      * Password encoder to use for decoding and encoding passwords.
      * <p>
      * Using Bcrypt as it is the existing password encoder.
+     * 
      * @return Bcrypt password encoder
      */
     @Bean
@@ -32,20 +29,23 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        // FIXME re-enable csrf and cors
+        // FIXME re-enable cors
         httpSecurity.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
                 .authorizeHttpRequests(getHttpAuthorizationCustomizer())
+                .sessionManagement(
+                    sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
         return httpSecurity.build();
     }
-    
+
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> getHttpAuthorizationCustomizer() {
         return customizer -> customizer
-                                    .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
-                                    .requestMatchers(HttpMethod.DELETE, "/api/**").authenticated()
-                                    .anyRequest().permitAll();
+                .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/**").authenticated()
+                .anyRequest().permitAll();
     }
 
 }
