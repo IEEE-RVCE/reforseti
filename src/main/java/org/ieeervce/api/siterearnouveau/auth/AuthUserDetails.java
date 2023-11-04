@@ -24,9 +24,6 @@ public class AuthUserDetails implements UserDetails, CredentialsContainer {
                 .orElse(Collections.emptyList());
     }
 
-    public AuthUserDetails() {
-    }
-
     public AuthUserDetails(User user) {
         this.user = user;
     }
