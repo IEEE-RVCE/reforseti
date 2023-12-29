@@ -11,12 +11,16 @@ import org.springframework.stereotype.Service;
 public class ExecomMembersService {
     private ExecomMembersRepository execomMembersRepository;
 
-    @Autowired    
+    @Autowired
     public ExecomMembersService(ExecomMembersRepository execomMembersRepository) {
         this.execomMembersRepository = execomMembersRepository;
     }
 
-    public List<ExecomMember> list(){
+    public List<ExecomMember> findAll() {
         return this.execomMembersRepository.findAll();
+    }
+
+    public List<ExecomMember> findBySocietyId(int societyId) {
+        return this.execomMembersRepository.findBySocietyId(societyId);
     }
 }
