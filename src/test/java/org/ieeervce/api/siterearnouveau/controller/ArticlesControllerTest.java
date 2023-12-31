@@ -1,13 +1,16 @@
 package org.ieeervce.api.siterearnouveau.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
 import org.hamcrest.Matchers;
+import org.ieeervce.api.siterearnouveau.dto.article.ArticleDTO;
 import org.ieeervce.api.siterearnouveau.entity.Article;
 import org.ieeervce.api.siterearnouveau.service.ArticleService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,95 +18,159 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
 class ArticlesControllerTest {
-        private static final String KEYWORD_SET = "this is a large keyword set";
-        @InjectMocks
-        ArticlesController articlesController;
-        @Mock
-        ArticleService articleService;
+    private static final String KEYWORD_SET = "this is a large keyword set";
+    @Mock
+    ArticleService articleService;
 
-        static ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
+    @Spy
+    ModelMapper modelMapper = new ModelMapper();
 
-        MockMvc mvc;
+    @Spy
+    ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
 
-        @BeforeEach
-        void setup() {
-                mvc = MockMvcBuilders.standaloneSetup(articlesController).build();
-                objectMapper.findAndRegisterModules();
-        }
+    @InjectMocks
+    ArticlesController articlesController;
 
-        @Test
-        void testList() throws Exception {
+    MockMvc mvc;
 
-                Integer articleId = 1;
-                Integer eventCategory = 45;
-                String title = "Article " + 1;
-                String author = "Author " + 1;
-                String content = "Content " + 1;
+    @BeforeEach
+    void setup() {
+        mvc = MockMvcBuilders.standaloneSetup(articlesController).build();
+        objectMapper.findAndRegisterModules();
+    }
 
-                var article = new Article();
-                article.setArticleId(articleId);
-                article.setTitle(title);
-                article.setAuthor(author);
-                article.setAddedDateTime(LocalDateTime.now());
-                article.setEventCategory(eventCategory);
-                article.setKeywords(KEYWORD_SET);
-                article.setContent(content);
+    @Test
+    void testList() throws Exception {
 
-                when(articleService.list()).thenReturn(Collections.singletonList(article));
+        Integer articleId = 1;
+        Integer eventCategory = 45;
+        String title = "Article " + 1;
+        String author = "Author " + 1;
+        String content = "Content " + 1;
 
-                mvc.perform(MockMvcRequestBuilders.get("/api/article"))
-                                .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
-                                .andExpect(jsonPath("$.response", Matchers.iterableWithSize(1)))
+        var article = new Article();
+        article.setArticleId(articleId);
+        article.setTitle(title);
+        article.setAuthor(author);
+        article.setAddedDateTime(LocalDateTime.now());
+        article.setEventCategory(eventCategory);
+        article.setKeywords(KEYWORD_SET);
+        article.setContent(content);
 
-                                .andExpect(jsonPath("$.response[0].articleId", Matchers.equalTo(articleId)))
-                                .andExpect(jsonPath("$.response[0].eventCategory", Matchers.equalTo(eventCategory)))
-                                .andExpect(jsonPath("$.response[0].author", Matchers.equalTo(author)))
-                                .andExpect(jsonPath("$.response[0].addedDateTime", Matchers.notNullValue()))
-                                .andExpect(jsonPath("$.response[0].content", Matchers.equalTo(content)))
-                                .andExpect(jsonPath("$.response[0].keywords", Matchers.equalTo(KEYWORD_SET)))
-                                .andExpect(jsonPath("$.response[0].title", Matchers.equalTo(title)));
-        }
+        when(articleService.list()).thenReturn(Collections.singletonList(article));
 
-        @Test
-        void testGetArticleById() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/article"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
+                .andExpect(jsonPath("$.response", Matchers.iterableWithSize(1)))
 
-                Integer articleId = 1;
-                Integer eventCategory = 45;
-                String title = "Article " + 1;
-                String author = "Author " + 1;
-                String content = "Content " + 1;
+                .andExpect(jsonPath("$.response[0].articleId", Matchers.equalTo(articleId)))
+                .andExpect(jsonPath("$.response[0].eventCategory", Matchers.equalTo(eventCategory)))
+                .andExpect(jsonPath("$.response[0].author", Matchers.equalTo(author)))
+                .andExpect(jsonPath("$.response[0].addedDateTime", Matchers.notNullValue()))
+                .andExpect(jsonPath("$.response[0].content", Matchers.equalTo(content)))
+                .andExpect(jsonPath("$.response[0].keywords", Matchers.equalTo(KEYWORD_SET)))
+                .andExpect(jsonPath("$.response[0].title", Matchers.equalTo(title)));
+    }
 
-                var article = new Article();
-                article.setArticleId(articleId);
-                article.setTitle(title);
-                article.setAuthor(author);
-                article.setAddedDateTime(LocalDateTime.now());
-                article.setEventCategory(eventCategory);
-                article.setKeywords(KEYWORD_SET);
-                article.setContent(content);
-                when(articleService.getArticleById(1)).thenReturn(article);
+    @Test
+    void testGetArticleById() throws Exception {
 
-                mvc.perform(MockMvcRequestBuilders.get("/api/article/1"))
-                                .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
-                                .andExpect(jsonPath("$.response", Matchers.notNullValue()))
+        Integer articleId = 1;
+        Integer eventCategory = 45;
+        String title = "Article " + 1;
+        String author = "Author " + 1;
+        String content = "Content " + 1;
 
-                                .andExpect(jsonPath("$.response.articleId", Matchers.equalTo(articleId)))
-                                .andExpect(jsonPath("$.response.eventCategory", Matchers.equalTo(eventCategory)))
-                                .andExpect(jsonPath("$.response.author", Matchers.equalTo(author)))
-                                .andExpect(jsonPath("$.response.addedDateTime", Matchers.notNullValue()))
-                                .andExpect(jsonPath("$.response.content", Matchers.equalTo(content)))
-                                .andExpect(jsonPath("$.response.keywords", Matchers.equalTo(KEYWORD_SET)))
-                                .andExpect(jsonPath("$.response.title", Matchers.equalTo(title)));
-        }
+        Article article = new Article();
+        article.setArticleId(articleId);
+        article.setTitle(title);
+        article.setAuthor(author);
+        article.setAddedDateTime(LocalDateTime.now());
+        article.setEventCategory(eventCategory);
+        article.setKeywords(KEYWORD_SET);
+        article.setContent(content);
+        when(articleService.getArticleById(1)).thenReturn(article);
+
+        mvc.perform(MockMvcRequestBuilders.get("/api/article/{articleId}",articleId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
+                .andExpect(jsonPath("$.response", Matchers.notNullValue()))
+
+                .andExpect(jsonPath("$.response.articleId", Matchers.equalTo(articleId)))
+                .andExpect(jsonPath("$.response.eventCategory", Matchers.equalTo(eventCategory)))
+                .andExpect(jsonPath("$.response.author", Matchers.equalTo(author)))
+                .andExpect(jsonPath("$.response.addedDateTime", Matchers.notNullValue()))
+                .andExpect(jsonPath("$.response.content", Matchers.equalTo(content)))
+                .andExpect(jsonPath("$.response.keywords", Matchers.equalTo(KEYWORD_SET)))
+                .andExpect(jsonPath("$.response.title", Matchers.equalTo(title)));
+    }
+
+    @Test
+    void testCreateArticle() throws JsonProcessingException, Exception {
+        Integer articleId = 1;
+        Integer eventCategory = 45;
+        String title = "Article " + 1;
+        String author = "Author " + 1;
+        String content = "Content " + 1;
+
+        ArticleDTO article = new ArticleDTO();
+
+        article.setTitle(title);
+        article.setAuthor(author);
+        article.setEventCategory(eventCategory);
+        article.setKeywords(KEYWORD_SET);
+        article.setContent(content);
+
+        Article articleSaved = modelMapper.map(article, Article.class);
+        articleSaved.setArticleId(articleId);
+        articleSaved.setAddedDateTime(LocalDateTime.now());
+
+        when(articleService.saveArticle(any())).thenReturn(articleSaved);
+
+        mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/api/article")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(article).getBytes(Charset.defaultCharset())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
+                .andExpect(jsonPath("$.response", Matchers.notNullValue()))
+
+                .andExpect(jsonPath("$.response.articleId", Matchers.equalTo(articleId)))
+                .andExpect(jsonPath("$.response.eventCategory", Matchers.equalTo(eventCategory)))
+                .andExpect(jsonPath("$.response.author", Matchers.equalTo(author)))
+                .andExpect(jsonPath("$.response.addedDateTime", Matchers.notNullValue()))
+                .andExpect(jsonPath("$.response.content", Matchers.equalTo(content)))
+                .andExpect(jsonPath("$.response.keywords", Matchers.equalTo(KEYWORD_SET)))
+                .andExpect(jsonPath("$.response.title", Matchers.equalTo(title)));
+    }
+
+    @Test
+    void testDeleteArticle() throws JsonProcessingException, Exception {
+        Integer articleId = 1;
+
+        when(articleService.deleteArticle(articleId)).thenReturn(true);
+
+        mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/api/article/{articleId}",articleId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
+                .andExpect(jsonPath("$.response", Matchers.equalTo(true)));
+    }
+
 }
