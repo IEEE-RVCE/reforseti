@@ -2,12 +2,15 @@ package org.ieeervce.api.siterearnouveau.service;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.ieeervce.api.siterearnouveau.dto.article.ArticleDTO;
 import org.ieeervce.api.siterearnouveau.entity.Article;
 import org.ieeervce.api.siterearnouveau.repository.ArticlesRepository;
 import org.junit.jupiter.api.Test;
@@ -25,9 +28,9 @@ class ArticleServiceTest {
     @InjectMocks
     ArticleService articleService;
 
-    @Mock
+    @Spy
     Article article1;
-    @Mock 
+    @Spy 
     Article article2;
     
     @Spy
@@ -51,7 +54,10 @@ class ArticleServiceTest {
         Article foundArticle = articleService.getArticleById(ARTICLE_ID);
         assertNull(foundArticle);
     }
-
-    
-
+    @Test
+    void testSaveArticle(){
+        when(articlesRepository.save(article1)).thenReturn(article2);
+        Article returnedArticle = articleService.saveArticle(article1);
+        assertSame(article2,returnedArticle);
+    }
 }
