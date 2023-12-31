@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ArticleService {
+    static final String FAILED_TO_DELETE_ARTICLE = "Failed to delete article";
     @Autowired
     ArticlesRepository articlesRepository;
 
@@ -19,4 +20,18 @@ public class ArticleService {
     public Article getArticleById(Integer id) {
         return articlesRepository.findById(id).orElse(null);
     }
+
+    public Article saveArticle(Article article) {
+        return articlesRepository.save(article);
+    }
+
+    public Boolean deleteArticle(Integer id) {
+        try {
+            articlesRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException(FAILED_TO_DELETE_ARTICLE, e);
+        }
+    }
+
 }
