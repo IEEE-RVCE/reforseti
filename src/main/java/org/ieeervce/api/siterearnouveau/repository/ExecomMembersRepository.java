@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ExecomMembersRepository extends JpaRepository<ExecomMember,Integer>{
     List<ExecomMember> findBySocietyId(Integer societyId);
 
-    List<ExecomMember> findByTenureEndDateIsNullOrBefore(LocalDate localDate);
+    List<ExecomMember> findByTenureEndDateIsNullOrTenureEndDateBefore(LocalDate localDate);
     
-    List<ExecomMember> findByTenureEndDateIsNotNullOrAfter(LocalDate localDate);
+    List<ExecomMember> findByTenureEndDateIsNotNullOrTenureEndDateAfter(LocalDate localDate);
 }

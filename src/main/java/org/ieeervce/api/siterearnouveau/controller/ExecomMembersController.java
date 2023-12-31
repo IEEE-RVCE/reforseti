@@ -24,7 +24,7 @@ public class ExecomMembersController {
     }
 
     @GetMapping("/all")
-    public ResultsDTO<List<ExecomMember>> list(){
+    public ResultsDTO<List<ExecomMember>> findAll(){
         List<ExecomMember> members = execomMembersService.findAll();
         return new ResultsDTO<>(members);
     }
