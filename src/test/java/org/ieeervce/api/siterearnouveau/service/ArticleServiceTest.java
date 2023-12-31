@@ -34,50 +34,54 @@ class ArticleServiceTest {
 
     @Spy
     Article article1;
-    @Spy 
-    Article article2;
-    
     @Spy
-    List<Article> articles = Arrays.asList(article1,article2);
+    Article article2;
+
+    @Spy
+    List<Article> articles = Arrays.asList(article1, article2);
 
     @Test
-    void testListAll(){
+    void testListAll() {
         when(articlesRepository.findAll()).thenReturn(articles);
         List<Article> articlesReturned = articleService.list();
-        assertSame(articles,articlesReturned);
+        assertSame(articles, articlesReturned);
     }
+
     @Test
-    void testGetArticleById(){
+    void testGetArticleById() {
         when(articlesRepository.findById(ARTICLE_ID)).thenReturn(Optional.of(article1));
         Article foundArticle = articleService.getArticleById(ARTICLE_ID);
-        assertSame(article1,foundArticle);
+        assertSame(article1, foundArticle);
     }
+
     @Test
-    void testGetArticleByIdWhenArticleDoesNotExist(){
+    void testGetArticleByIdWhenArticleDoesNotExist() {
         when(articlesRepository.findById(ARTICLE_ID)).thenReturn(Optional.empty());
         Article foundArticle = articleService.getArticleById(ARTICLE_ID);
         assertNull(foundArticle);
     }
+
     @Test
-    void testSaveArticle(){
+    void testSaveArticle() {
         when(articlesRepository.save(article1)).thenReturn(article2);
         Article returnedArticle = articleService.saveArticle(article1);
-        assertSame(article2,returnedArticle);
+        assertSame(article2, returnedArticle);
     }
+
     @Test
-    void testDelete(){
+    void testDelete() {
         int id = 1;
         articleService.deleteArticle(id);
         verify(articlesRepository).deleteById(id);
     }
+
     @Test
-    void testDeleteThrowsRuntimeExceptionOnFailure(){
+    void testDeleteThrowsRuntimeExceptionOnFailure() {
         int id = 1;
         doThrow(new IllegalArgumentException("Something went wrong")).when(articlesRepository).deleteById(id);
-        
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, ()->{
-            articleService.deleteArticle(id);
 
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> {
+            articleService.deleteArticle(id);
         });
 
         assertTrue(runtimeException.getMessage().contains(ArticleService.FAILED_TO_DELETE_ARTICLE));
