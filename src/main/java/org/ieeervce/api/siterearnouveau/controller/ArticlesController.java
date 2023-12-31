@@ -37,9 +37,9 @@ public class ArticlesController {
     }
 
     @PostMapping()
-    ResultsDTO<Boolean> saveArticle(@RequestBody ArticleDTO articleDTO) {
+    ResultsDTO<Article> saveArticle(@RequestBody ArticleDTO articleDTO) {
         Article article = modelMapper.map(articleDTO, Article.class);
-        var result = articleService.saveArticle(article);
+        Article result = articleService.saveArticle(article);
         return new ResultsDTO<>(result);
     }
 
