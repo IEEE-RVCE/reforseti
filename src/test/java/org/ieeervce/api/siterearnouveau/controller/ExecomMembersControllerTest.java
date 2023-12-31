@@ -53,4 +53,11 @@ class ExecomMembersControllerTest {
                 .andExpect(jsonPath("$.ok", equalTo(true)));
         verify(execomMembersService).deleteByMemberId(id);
     }
+    @Test
+    void testEmptyAlumni() throws Exception {
+        int societyId = 1;
+        mockMvc.perform(get("/api/execom/alumni/{societyId}",societyId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.ok", equalTo(true)));
+    }
 }
