@@ -1,13 +1,10 @@
 package org.ieeervce.api.siterearnouveau.service;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.ieeervce.api.siterearnouveau.entity.ExecomMember;
 import org.ieeervce.api.siterearnouveau.repository.ExecomMembersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 @Service
 public class ExecomMembersService {
