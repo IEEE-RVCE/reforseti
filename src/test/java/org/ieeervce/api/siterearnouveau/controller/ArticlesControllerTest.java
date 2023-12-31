@@ -37,10 +37,9 @@ class ArticlesControllerTest {
 
     @Spy
     ModelMapper modelMapper = new ModelMapper();
-    
+
     @Spy
     ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
-
 
     @InjectMocks
     ArticlesController articlesController;
@@ -129,52 +128,49 @@ class ArticlesControllerTest {
         String content = "Content " + 1;
 
         ArticleDTO article = new ArticleDTO();
-        
+
         article.setTitle(title);
         article.setAuthor(author);
         article.setEventCategory(eventCategory);
         article.setKeywords(KEYWORD_SET);
         article.setContent(content);
 
-        Article articleSaved = modelMapper.map(article,Article.class);
+        Article articleSaved = modelMapper.map(article, Article.class);
         articleSaved.setArticleId(articleId);
         articleSaved.setAddedDateTime(LocalDateTime.now());
-        
+
         when(articleService.saveArticle(any())).thenReturn(articleSaved);
 
         mvc.perform(
-            MockMvcRequestBuilders
-                .post("/api/article")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(article).getBytes(Charset.defaultCharset()))
-            )
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
-            .andExpect(jsonPath("$.response", Matchers.notNullValue()))
+                MockMvcRequestBuilders
+                        .post("/api/article")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(article).getBytes(Charset.defaultCharset())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
+                .andExpect(jsonPath("$.response", Matchers.notNullValue()))
 
-            .andExpect(jsonPath("$.response.articleId", Matchers.equalTo(articleId)))
-            .andExpect(jsonPath("$.response.eventCategory", Matchers.equalTo(eventCategory)))
-            .andExpect(jsonPath("$.response.author", Matchers.equalTo(author)))
-            .andExpect(jsonPath("$.response.addedDateTime", Matchers.notNullValue()))
-            .andExpect(jsonPath("$.response.content", Matchers.equalTo(content)))
-            .andExpect(jsonPath("$.response.keywords", Matchers.equalTo(KEYWORD_SET)))
-            .andExpect(jsonPath("$.response.title", Matchers.equalTo(title)));
+                .andExpect(jsonPath("$.response.articleId", Matchers.equalTo(articleId)))
+                .andExpect(jsonPath("$.response.eventCategory", Matchers.equalTo(eventCategory)))
+                .andExpect(jsonPath("$.response.author", Matchers.equalTo(author)))
+                .andExpect(jsonPath("$.response.addedDateTime", Matchers.notNullValue()))
+                .andExpect(jsonPath("$.response.content", Matchers.equalTo(content)))
+                .andExpect(jsonPath("$.response.keywords", Matchers.equalTo(KEYWORD_SET)))
+                .andExpect(jsonPath("$.response.title", Matchers.equalTo(title)));
     }
 
     @Test
     void testDeleteArticle() throws JsonProcessingException, Exception {
         Integer articleId = 1;
-        
+
         when(articleService.deleteArticle(articleId)).thenReturn(true);
 
         mvc.perform(
-            MockMvcRequestBuilders
-                .delete("/api/article/1")
-            )
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
-            .andExpect(jsonPath("$.response", Matchers.equalTo(true)));
+                MockMvcRequestBuilders
+                        .delete("/api/article/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
+                .andExpect(jsonPath("$.response", Matchers.equalTo(true)));
     }
-
 
 }
