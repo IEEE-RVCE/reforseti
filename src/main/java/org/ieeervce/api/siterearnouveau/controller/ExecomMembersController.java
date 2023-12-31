@@ -30,8 +30,8 @@ public class ExecomMembersController {
     }
 
     @GetMapping("/{societyId}")
-    public ResultsDTO<List<ExecomMember>> listBySocietyId(@PathVariable int societyId){
-        List<ExecomMember> members = execomMembersService.findBySocietyId(societyId);
+    public ResultsDTO<List<ExecomMember>> listCurrentBySocietyId(@PathVariable int societyId){
+        List<ExecomMember> members = execomMembersService.findCurrentBySocietyId(societyId);
         return new ResultsDTO<>(members);
     }
 
