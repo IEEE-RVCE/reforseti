@@ -19,10 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/article")
 public class ArticlesController {
-    @Autowired
-    ArticleService articleService;
-    @Autowired
-    ModelMapper modelMapper;
+    private ArticleService articleService;
+    private ModelMapper modelMapper;
+
+    public ArticlesController(ArticleService articleService, ModelMapper modelMapper) {
+        this.articleService = articleService;
+        this.modelMapper = modelMapper;
+    }
 
     @GetMapping()
     ResultsDTO<List<Article>> list() {
