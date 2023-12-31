@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -55,10 +58,18 @@ public class ExecomMembersController {
         return new ResultsDTO<>(null);
     }
 
-    @PostMapping("/{execomId}")
-    public ResultsDTO<ExecomMember> updateMember(@PathVariable int execomId) {
-        return new ResultsDTO<>(null);
+    @PutMapping("/{execomId}")
+    public ResultsDTO<ExecomMember> updateMember(@PathVariable int execomId,@RequestBody ExecomMemberDTO execomMemberDTO) {
+        ExecomMember execomMember = modelMapper.map(execomMemberDTO, ExecomMember.class);
+        return new ResultsDTO<>(execomMembersService.updateExecomMember(execomId, execomMember));
     }
+
+    @PostMapping("")
+    public ResultsDTO<ExecomMember> createMember(@RequestBody ExecomMemberDTO execomMemberDTO){
+        ExecomMember newExecomMember = modelMapper.map(execomMemberDTO,ExecomMember.class);
+        return new ResultsDTO<>(execomMembersService.create(newExecomMember));
+    }
+
 
 
     private Map<Integer, List<ExecomMemberDTO>> getAlumniDTO(List<ExecomMember> members) {
