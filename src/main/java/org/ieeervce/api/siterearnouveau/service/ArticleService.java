@@ -20,13 +20,8 @@ public class ArticleService {
         return articlesRepository.findById(id).orElse(null);
     }
 
-    public Boolean saveArticle(Article article) {
-        try {
-            articlesRepository.save(article);
-            return true;
-        } catch (Exception e) {
-            throw new RuntimeException("Error while saving article", e);
-        }
+    public Article saveArticle(Article article) {
+        return articlesRepository.save(article);
     }
 
     public Boolean deleteArticle(Integer id) {
