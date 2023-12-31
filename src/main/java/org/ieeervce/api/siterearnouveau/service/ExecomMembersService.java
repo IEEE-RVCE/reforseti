@@ -23,4 +23,8 @@ public class ExecomMembersService {
     public List<ExecomMember> findBySocietyId(int societyId) {
         return this.execomMembersRepository.findBySocietyId(societyId);
     }
+
+    public void deleteByMemberId(int id){
+        this.execomMembersRepository.deleteById(id);
+    }
 }
