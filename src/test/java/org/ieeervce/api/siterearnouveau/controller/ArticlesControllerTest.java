@@ -105,7 +105,7 @@ class ArticlesControllerTest {
         article.setContent(content);
         when(articleService.getArticleById(1)).thenReturn(article);
 
-        mvc.perform(MockMvcRequestBuilders.get("/api/article/1"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/article/{articleId}",articleId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
                 .andExpect(jsonPath("$.response", Matchers.notNullValue()))
@@ -167,7 +167,7 @@ class ArticlesControllerTest {
 
         mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/api/article/1"))
+                        .delete("/api/article/{articleId}",articleId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
                 .andExpect(jsonPath("$.response", Matchers.equalTo(true)));
