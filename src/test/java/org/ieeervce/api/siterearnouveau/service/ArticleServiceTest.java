@@ -2,7 +2,11 @@ package org.ieeervce.api.siterearnouveau.service;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -59,5 +63,24 @@ class ArticleServiceTest {
         when(articlesRepository.save(article1)).thenReturn(article2);
         Article returnedArticle = articleService.saveArticle(article1);
         assertSame(article2,returnedArticle);
+    }
+    @Test
+    void testDelete(){
+        int id = 1;
+        articleService.deleteArticle(id);
+        verify(articlesRepository).deleteById(id);
+    }
+    @Test
+    void testDeleteThrowsRuntimeExceptionOnFailure(){
+        int id = 1;
+        doThrow(new IllegalArgumentException("Something went wrong")).when(articlesRepository).deleteById(id);
+        
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, ()->{
+            articleService.deleteArticle(id);
+
+        });
+
+        assertTrue(runtimeException.getMessage().contains(ArticleService.FAILED_TO_DELETE_ARTICLE));
+        verify(articlesRepository).deleteById(id);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ArticleService {
+    static final String FAILED_TO_DELETE_ARTICLE = "Failed to delete article";
     @Autowired
     ArticlesRepository articlesRepository;
 
@@ -29,7 +30,7 @@ public class ArticleService {
             articlesRepository.deleteById(id);
             return true;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to delete article", e);
+            throw new RuntimeException(FAILED_TO_DELETE_ARTICLE, e);
         }
     }
 
