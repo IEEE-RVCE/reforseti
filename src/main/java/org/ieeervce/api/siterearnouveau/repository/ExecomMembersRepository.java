@@ -1,6 +1,5 @@
 package org.ieeervce.api.siterearnouveau.repository;
 
-import java.time.LocalDate;
 import java.util.List;
 import org.ieeervce.api.siterearnouveau.entity.ExecomMember;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ExecomMembersRepository extends JpaRepository<ExecomMember,Integer>{
     List<ExecomMember> findBySocietyId(Integer societyId);
 
-    List<ExecomMember> findByTenureEndDateIsNullOrTenureEndDateBefore(LocalDate localDate);
+    List<ExecomMember> findByTenureEndDateIsNotNullAndSocietyId(int societyId);
     
     List<ExecomMember> findByTenureEndDateIsNullAndSocietyId(int societyId);
 }
