@@ -86,7 +86,7 @@ public class ExecomMembersController {
                 .collect(Collectors.toMap(
                         this::getYearFromExecomMember,
                         this::getExecomMemberListSingleton,
-                        this::mergExecomMemberDTOLists));
+                        this::mergeExecomMemberDTOLists));
     }
 
     private int getYearFromExecomMember(ExecomMemberDTO dto) {
@@ -101,7 +101,7 @@ public class ExecomMembersController {
         return dtoList;
     }
 
-    private List<ExecomMemberDTO> mergExecomMemberDTOLists(List<ExecomMemberDTO> list1, List<ExecomMemberDTO> list2) {
+    private List<ExecomMemberDTO> mergeExecomMemberDTOLists(List<ExecomMemberDTO> list1, List<ExecomMemberDTO> list2) {
         list1.addAll(list2);
         return list1;
     }

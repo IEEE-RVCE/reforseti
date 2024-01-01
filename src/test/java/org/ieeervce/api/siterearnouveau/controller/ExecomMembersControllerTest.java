@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -127,7 +128,27 @@ class ExecomMembersControllerTest {
             .andExpect(jsonPath("$.response",Matchers.iterableWithSize(1)))
             .andExpect(jsonPath("$.response[0].id", equalTo(MEMBER_ID)))
             .andExpect(jsonPath("$.response[0].tenureEndDate", Matchers.notNullValue()));
-        
+    }
+
+    @Test
+    void testListCurrentBySocietyId() throws Exception {
+        ExecomMember execomMember = new ExecomMember();
+        execomMember.setFirstName(FIRSTNAME);
+        execomMember.setLastName(LASTNAME);
+        execomMember.setImagePath(IMAGE_LINK);
+        execomMember.setPosition(POSITION);
+        execomMember.setId(MEMBER_ID);
+        execomMember.setSocietyId(SOCIETY_ID);
+        execomMember.setTenureStartDate(NOW_TIME);
+        execomMember.setTenureEndDate(NOW_TIME);
+
+        when(execomMembersService.findCurrentBySocietyId(SOCIETY_ID)).thenReturn(Collections.singletonList(execomMember));
+        mockMvc.perform(get("/api/execom/{societyId}",SOCIETY_ID))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.ok", equalTo(true)))
+            .andExpect(jsonPath("$.response",Matchers.iterableWithSize(1)))
+            .andExpect(jsonPath("$.response[0].id", equalTo(MEMBER_ID)))
+            .andExpect(jsonPath("$.response[0].tenureEndDate", Matchers.notNullValue()));
     }
     @Test
     void testEndTenureForAll() throws Exception {
@@ -150,7 +171,7 @@ class ExecomMembersControllerTest {
             .andExpect(jsonPath("$.response[0].tenureEndDate", Matchers.notNullValue()));
     }
     @Test
-    void testSingleAlumni() throws Exception {
+    void testAlumni() throws Exception {
         ExecomMember execomMember = new ExecomMember();
         execomMember.setFirstName(FIRSTNAME);
         execomMember.setLastName(LASTNAME);
@@ -161,12 +182,26 @@ class ExecomMembersControllerTest {
         execomMember.setTenureStartDate(NOW_TIME);
         execomMember.setTenureEndDate(NOW_TIME);
 
-        List<ExecomMember> execomMembers = Collections.singletonList(execomMember);
-        when(execomMembersService.findAlumniBySocietyId(SOCIETY_ID)).thenReturn(execomMembers);
+        ExecomMember execomMember2 = new ExecomMember();
+        execomMember2.setFirstName(FIRSTNAME);
+        execomMember2.setLastName(LASTNAME);
+        execomMember2.setImagePath(IMAGE_LINK);
+        execomMember2.setPosition(POSITION);
+        execomMember2.setId(MEMBER_ID);
+        execomMember2.setSocietyId(SOCIETY_ID);
+        execomMember2.setTenureStartDate(NOW_TIME);
+        execomMember2.setTenureEndDate(NOW_TIME);
 
+        List<ExecomMember> execomMembers = Arrays.asList(execomMember,execomMember2);
+        when(execomMembersService.findAlumniBySocietyId(SOCIETY_ID)).thenReturn(execomMembers);
+        String year = String.valueOf(NOW_TIME.getYear());
+        String yearMatcher = "$.response."+year;
         mockMvc.perform(get("/api/execom/alumni/{societyId}",SOCIETY_ID))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.ok", equalTo(true)))
-            .andExpect(jsonPath("$.response",Matchers.aMapWithSize(1)));
+            .andExpect(jsonPath("$.response",Matchers.aMapWithSize(1)))
+            .andExpect(jsonPath("$.response",Matchers.hasKey(equalTo(year))))
+            .andExpect(jsonPath(yearMatcher,Matchers.iterableWithSize(2)));
+            
     }
 }
