@@ -1,6 +1,7 @@
 package org.ieeervce.api.siterearnouveau.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -59,6 +60,29 @@ class ExecomMembersServiceTest {
     }
 
     @Test
+    void testEndTenureSocietyId() {
+        List<ExecomMember> memberList = Arrays.asList(member1, member2);
+        when(execomMembersRepository.findByTenureEndDateIsNullAndSocietyId(SOCIETY_ID)).thenReturn(memberList);
+        when(execomMembersRepository.saveAll(memberList)).thenReturn(memberList);
+        List<ExecomMember> returnedMemberList = execomMembersService.endTenureForSocietyId(SOCIETY_ID);
+        verify(member1).setTenureEndDate(any());
+        verify(member2).setTenureEndDate(any());
+
+        assertEquals(memberList, returnedMemberList);
+    }
+    @Test
+    void testEndTenureAll() {
+        List<ExecomMember> memberList = Arrays.asList(member1, member2);
+        when(execomMembersRepository.findByTenureEndDateIsNull()).thenReturn(memberList);
+        when(execomMembersRepository.saveAll(memberList)).thenReturn(memberList);
+        List<ExecomMember> returnedMemberList = execomMembersService.endTenureForAllCurrent();
+        verify(member1).setTenureEndDate(any());
+        verify(member2).setTenureEndDate(any());
+
+        assertEquals(memberList, returnedMemberList);
+    }
+
+    @Test
     void testCreate() {
         when(execomMembersRepository.save(member1)).thenReturn(member2);
 
@@ -97,6 +121,5 @@ class ExecomMembersServiceTest {
         verify(member2).setPosition(any());
         verify(member2).setTenureStartDate(any());
         verify(member2).setTenureEndDate(any());
-        
     }
 }
