@@ -10,4 +10,6 @@ public interface ExecomMembersRepository extends JpaRepository<ExecomMember,Inte
     List<ExecomMember> findByTenureEndDateIsNotNullAndSocietyId(int societyId);
     
     List<ExecomMember> findByTenureEndDateIsNullAndSocietyId(int societyId);
+
+    List<ExecomMember> findByTenureEndDateIsNull();
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.dto.execom.ExecomMemberDTO;
@@ -58,27 +59,35 @@ public class ExecomMembersController {
     }
 
     @PutMapping("/{execomId}")
-    public ResultsDTO<ExecomMember> updateMember(@PathVariable int execomId,@RequestBody ExecomMemberDTO execomMemberDTO) {
+    public ResultsDTO<ExecomMember> updateMember(@PathVariable int execomId,
+            @RequestBody ExecomMemberDTO execomMemberDTO) {
         ExecomMember execomMember = modelMapper.map(execomMemberDTO, ExecomMember.class);
         return new ResultsDTO<>(execomMembersService.updateExecomMember(execomId, execomMember));
     }
 
     @PostMapping("")
-    public ResultsDTO<ExecomMember> createMember(@RequestBody ExecomMemberDTO execomMemberDTO){
-        ExecomMember newExecomMember = modelMapper.map(execomMemberDTO,ExecomMember.class);
+    public ResultsDTO<ExecomMember> createMember(@RequestBody ExecomMemberDTO execomMemberDTO) {
+        ExecomMember newExecomMember = modelMapper.map(execomMemberDTO, ExecomMember.class);
         return new ResultsDTO<>(execomMembersService.create(newExecomMember));
     }
 
+    @PostMapping("/end/{societyId}")
+    public ResultsDTO<List<ExecomMember>> endTenureForSociety(@PathVariable int societyId) {
+        return new ResultsDTO<>(execomMembersService.endTenureForSocietyId(societyId));
+    }
 
+    @PostMapping("/end")
+    public ResultsDTO<List<ExecomMember>> endTenureForAllCurrent() {
+        return new ResultsDTO<>(execomMembersService.endTenureForAllCurrent());
+    }
 
     private Map<Integer, List<ExecomMemberDTO>> getAlumniDTO(List<ExecomMember> members) {
-        Map<Integer, List<ExecomMemberDTO>> dtoMap = members.stream()
+        return members.stream()
                 .map(e -> modelMapper.map(e, ExecomMemberDTO.class))
                 .collect(Collectors.toMap(
                         this::getYearFromExecomMember,
-                        this::getExecomMemberListSingleton, 
+                        this::getExecomMemberListSingleton,
                         this::mergExecomMemberDTOLists));
-        return (dtoMap);
     }
 
     private int getYearFromExecomMember(ExecomMemberDTO dto) {
@@ -92,6 +101,7 @@ public class ExecomMembersController {
         dtoList.add(dto);
         return dtoList;
     }
+
     private List<ExecomMemberDTO> mergExecomMemberDTOLists(List<ExecomMemberDTO> list1, List<ExecomMemberDTO> list2) {
         list1.addAll(list2);
         return list1;

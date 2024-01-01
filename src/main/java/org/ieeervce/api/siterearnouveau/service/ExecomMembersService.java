@@ -1,5 +1,6 @@
 package org.ieeervce.api.siterearnouveau.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.ieeervce.api.siterearnouveau.entity.ExecomMember;
 import org.ieeervce.api.siterearnouveau.repository.ExecomMembersRepository;
@@ -42,6 +43,19 @@ public class ExecomMembersService {
 
     public void deleteByMemberId(int id) {
         this.execomMembersRepository.deleteById(id);
+    }
+
+    public List<ExecomMember> endTenureForSocietyId(int societyId) {
+        List<ExecomMember> execomMembers = this.execomMembersRepository
+                .findByTenureEndDateIsNullAndSocietyId(societyId);
+        execomMembers.forEach(e -> e.setTenureEndDate(LocalDate.now()));
+        return execomMembersRepository.saveAll(execomMembers);
+    }
+
+    public List<ExecomMember> endTenureForAllCurrent() {
+        List<ExecomMember> execomMembers = this.execomMembersRepository.findByTenureEndDateIsNull();
+        execomMembers.forEach(e -> e.setTenureEndDate(LocalDate.now()));
+        return execomMembersRepository.saveAll(execomMembers);
     }
 
 }
