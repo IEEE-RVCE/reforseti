@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -106,6 +107,47 @@ class ExecomMembersControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.ok", equalTo(true)));
         verify(execomMembersService).findAlumniBySocietyId(SOCIETY_ID);
+    }
+    @Test
+    void testEndTenureForSociety() throws Exception {
+        ExecomMember execomMember = new ExecomMember();
+        execomMember.setFirstName(FIRSTNAME);
+        execomMember.setLastName(LASTNAME);
+        execomMember.setImagePath(IMAGE_LINK);
+        execomMember.setPosition(POSITION);
+        execomMember.setId(MEMBER_ID);
+        execomMember.setSocietyId(SOCIETY_ID);
+        execomMember.setTenureStartDate(NOW_TIME);
+        execomMember.setTenureEndDate(NOW_TIME);
+
+        when(execomMembersService.endTenureForSocietyId(SOCIETY_ID)).thenReturn(Collections.singletonList(execomMember));
+        mockMvc.perform(post("/api/execom/end/{societyId}",SOCIETY_ID))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.ok", equalTo(true)))
+            .andExpect(jsonPath("$.response",Matchers.iterableWithSize(1)))
+            .andExpect(jsonPath("$.response[0].id", equalTo(MEMBER_ID)))
+            .andExpect(jsonPath("$.response[0].tenureEndDate", Matchers.notNullValue()));
+        
+    }
+    @Test
+    void testEndTenureForAll() throws Exception {
+        ExecomMember execomMember = new ExecomMember();
+        execomMember.setFirstName(FIRSTNAME);
+        execomMember.setLastName(LASTNAME);
+        execomMember.setImagePath(IMAGE_LINK);
+        execomMember.setPosition(POSITION);
+        execomMember.setId(MEMBER_ID);
+        execomMember.setSocietyId(SOCIETY_ID);
+        execomMember.setTenureStartDate(NOW_TIME);
+        execomMember.setTenureEndDate(NOW_TIME);
+
+        when(execomMembersService.endTenureForAllCurrent()).thenReturn(Collections.singletonList(execomMember));
+        mockMvc.perform(post("/api/execom/end"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.ok", equalTo(true)))
+            .andExpect(jsonPath("$.response",Matchers.iterableWithSize(1)))
+            .andExpect(jsonPath("$.response[0].id", equalTo(MEMBER_ID)))
+            .andExpect(jsonPath("$.response[0].tenureEndDate", Matchers.notNullValue()));
     }
     @Test
     void testSingleAlumni() throws Exception {
