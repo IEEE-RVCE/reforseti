@@ -1,9 +1,11 @@
 package org.ieeervce.api.siterearnouveau.controller;
 
-import java.util.List;
+import java.util.stream.Stream;
 
-import org.ieeervce.api.siterearnouveau.entity.Image;
+import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
+import org.ieeervce.api.siterearnouveau.dto.image.ImageDescriptionDTO;
 import org.ieeervce.api.siterearnouveau.service.ImageService;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,14 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/image")
 public class ImagesController {
     private ImageService imageService;
+    private ModelMapper modelMapper;
 
-    public ImagesController(ImageService imageService) {
+    public ImagesController(ImageService imageService, ModelMapper modelMapper) {
         this.imageService = imageService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
-    public List<Image> list() {
-        return imageService.list();
+    public ResultsDTO<Stream<ImageDescriptionDTO>> list() {
+        Stream<ImageDescriptionDTO> imageDescriptionStream = imageService.list().stream().map(e -> modelMapper.map(e, ImageDescriptionDTO.class));
+        return new ResultsDTO<>(imageDescriptionStream);
     }
 
     @GetMapping("/{iid}")

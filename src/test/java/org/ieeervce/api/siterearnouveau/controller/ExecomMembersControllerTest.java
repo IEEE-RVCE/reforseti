@@ -30,13 +30,12 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@ExtendWith({ MockitoExtension.class, RestDocumentationExtension.class })
+@ExtendWith(MockitoExtension.class)
 class ExecomMembersControllerTest {
 
     private static final LocalDate NOW_TIME = LocalDate.now();
