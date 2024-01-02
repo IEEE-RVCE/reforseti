@@ -1,7 +1,6 @@
 package org.ieeervce.api.siterearnouveau.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 @Data

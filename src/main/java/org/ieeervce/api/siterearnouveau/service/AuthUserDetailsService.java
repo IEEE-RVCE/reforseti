@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 import org.ieeervce.api.siterearnouveau.auth.AuthUserDetails;
 import org.ieeervce.api.siterearnouveau.entity.User;
 import org.ieeervce.api.siterearnouveau.repository.UsersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -17,8 +16,11 @@ import org.springframework.stereotype.Service;
 public class AuthUserDetailsService implements UserDetailsService {
 	private static final Supplier<UsernameNotFoundException> EXCEPTION_SUPPLIER = () -> new UsernameNotFoundException(
 			"Username not found");
-	@Autowired
-	UsersRepository usersRepository;
+	private UsersRepository usersRepository;
+
+	public AuthUserDetailsService(UsersRepository usersRepository) {
+		this.usersRepository = usersRepository;
+	}
 
 	@Override
 	public AuthUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

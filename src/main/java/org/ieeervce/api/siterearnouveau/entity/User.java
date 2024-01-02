@@ -1,5 +1,7 @@
 package org.ieeervce.api.siterearnouveau.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,32 +14,33 @@ import lombok.ToString;
 @Entity
 @Table(name="users")
 @Data
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = 100L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "uid")
-    Integer userId;
+    private Integer userId;
 
     @Column(name = "sid")
-    Integer societyId;
+    private Integer societyId;
 
     @Column(name = "firstname")
-    String firstName;
+    private String firstName;
 
     @Column(name = "lastname")
-    String lastName;
+    private String lastName;
     
     @Column
-    String email;
+    private String email;
     
     @Column(name = "pic")
     @ToString.Exclude
-    byte[] picture;
+    private byte[] picture;
 
     @Column(name = "pwd")
     @ToString.Exclude
-    String password;
+    private String password;
 
     @Column
-    String role;
+    private String role;
 }

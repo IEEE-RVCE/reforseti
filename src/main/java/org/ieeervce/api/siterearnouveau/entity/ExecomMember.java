@@ -17,30 +17,30 @@ import lombok.Data;
 public class ExecomMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private Integer id;
 
     @Column(name = "sid")
-    Integer societyId;
+    private Integer societyId;
 
     @Column(name = "firstname")
-    String firstName;
+    private String firstName;
 
     @Column(name = "lastname")
-    String lastName;
+    private String lastName;
 
     @Column(name = "position")
-    String position;
+    private String position;
 
     @Column(name = "imagepath")
-    String imagePath;
+    private String imagePath;
     
     @Column(name = "tenurestart")
-    LocalDate tenureStartDate;
+    private LocalDate tenureStartDate;
 
     @Column(name = "tenureend")
-    LocalDate tenureEndDate;
+    private LocalDate tenureEndDate;
 
     @Column(name = "execom_member_uuid")
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID memberUuid;
+    private UUID memberUuid;
 }

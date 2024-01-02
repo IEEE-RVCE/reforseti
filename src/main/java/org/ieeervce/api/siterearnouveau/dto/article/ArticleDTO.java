@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ArticleDTO {
-    Integer eventCategory;
-    String content;
-    String keywords;
-    String title;
-    String author;
+    private Integer eventCategory;
+    private String content;
+    private String keywords;
+    private String title;
+    private String author;
 }

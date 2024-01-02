@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ExecomMemberDTO {
-    Integer societyId;
-    String firstName;
-    String lastName;
-    String position;
-    String imagePath;
-    LocalDate tenureStartDate;
-    LocalDate tenureEndDate;
+    private Integer societyId;
+    private String firstName;
+    private String lastName;
+    private String position;
+    private String imagePath;
+    private LocalDate tenureStartDate;
+    private LocalDate tenureEndDate;
 }

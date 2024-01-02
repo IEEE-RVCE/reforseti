@@ -19,43 +19,43 @@ import lombok.Data;
 public class Event {
     @Column(name = "eid")
     @Id
-    int eventId;
+    private int eventId;
 
     @Column(name = "ename")
-    String eventName;
+    private String eventName;
 
     @Column(name = "eventstart")
-    LocalDateTime eventStartTime;
+    private LocalDateTime eventStartTime;
 
     @Column(name = "eventend")
-    LocalDateTime eventEndTime;
+    private LocalDateTime eventEndTime;
 
     @Column(name = "pubstart")
-    LocalDateTime publicityStartTime;
+    private LocalDateTime publicityStartTime;
 
     @Column(name = "pubend")
-    LocalDateTime publicityEndTime;
+    private LocalDateTime publicityEndTime;
 
     @Column(name = "feeno")
-    Integer feeNotIEEEMember;
+    private Integer feeNotIEEEMember;
 
     @Column(name = "feeyes")
-    Integer feeIEEEMember;
+    private Integer feeIEEEMember;
 
     @Column(name = "ecat")
-    Integer eventCategory;
+    private Integer eventCategory;
 
     @Column
-    String smallposterlink;
+    private String smallposterlink;
     @Column
-    String largeposterlink;
+    private String largeposterlink;
     @Column
-    String reglink;
+    private String reglink;
     @Column
-    String brochurelink;
+    private String brochurelink;
     @Column
     @JdbcTypeCode(value = SqlTypes.JSON)
-    JsonNode hosts;
+    private JsonNode hosts;
     @Column
-    String keywords;
+    private String keywords;
 }

@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @RestController
 public class SiteRearNouveauApplication {
+	static final String IEEE_RVCE = "IEEE-RVCE";
 
 	@GetMapping("")
 	String mainEndpoint() {
-		return "IEEE-RVCE";
+		return IEEE_RVCE;
 	}
 
 	public static void main(String[] args) {
