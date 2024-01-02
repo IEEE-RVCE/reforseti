@@ -25,6 +25,6 @@ public class ImageService {
      * @return Optional representing bytes of the image if present. 
      */
     public Optional<byte[]> getBytesByImageId(int imageId){
-        return imagesRepository.findById(imageId).map(Image::getImage);
+        return imagesRepository.findById(imageId).map(Image::getImageBytes);
     }
 }

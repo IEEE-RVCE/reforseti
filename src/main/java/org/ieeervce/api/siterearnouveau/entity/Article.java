@@ -16,7 +16,7 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "arid")
-    Integer articleId;
+    private Integer articleId;
     
     @Column(name="ecat")
     private Integer eventCategory;
@@ -28,11 +28,11 @@ public class Article {
     private LocalDateTime addedDateTime;
 
     @Column
-    String content;
+    private String content;
 
     @Column
-    String keywords;
+    private String keywords;
 
     @Column
-    String title;
+    private String title;
 }
