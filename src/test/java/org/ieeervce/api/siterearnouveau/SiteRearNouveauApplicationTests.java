@@ -15,19 +15,20 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 class SiteRearNouveauApplicationTests {
 
-	@Autowired
-	MockMvc mockMvc;
-	@Autowired
-	SiteRearNouveauApplication siteRearNouveauApplication;
+    @Autowired
+    MockMvc mockMvc;
+    @Autowired
+    SiteRearNouveauApplication siteRearNouveauApplication;
 
-	@Test
-	void contextLoads() {
-		assertThat(siteRearNouveauApplication).isNotNull();
-	}
-	@Test
-	void testRootApiWorks() throws Exception{
-		mockMvc.perform(get("/"))
-			.andExpect(content().string(containsString(SiteRearNouveauApplication.IEEE_RVCE)));
-	}
+    @Test
+    void contextLoads() {
+        assertThat(siteRearNouveauApplication).isNotNull();
+    }
+
+    @Test
+    void testRootApiWorks() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(content().string(containsString(SiteRearNouveauApplication.IEEE_RVCE)));
+    }
 
 }
