@@ -15,6 +15,7 @@ import lombok.ToString;
 @Table(name="users")
 @Data
 public class User implements Serializable {
+    private static final long serialVersionUID = 100L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "uid")
