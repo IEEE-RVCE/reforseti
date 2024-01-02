@@ -7,7 +7,6 @@ import org.ieeervce.api.siterearnouveau.dto.article.ArticleDTO;
 import org.ieeervce.api.siterearnouveau.entity.Article;
 import org.ieeervce.api.siterearnouveau.service.ArticleService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,10 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/article")
 public class ArticlesController {
-    @Autowired
-    ArticleService articleService;
-    @Autowired
-    ModelMapper modelMapper;
+    private ArticleService articleService;
+    private ModelMapper modelMapper;
+
+    public ArticlesController(ArticleService articleService, ModelMapper modelMapper) {
+        this.articleService = articleService;
+        this.modelMapper = modelMapper;
+    }
 
     @GetMapping()
     ResultsDTO<List<Article>> list() {
@@ -45,7 +47,7 @@ public class ArticlesController {
 
     @DeleteMapping("/{id}")
     ResultsDTO<Boolean> deleteArticle(@PathVariable("id") Integer id) {
-        var result = articleService.deleteArticle(id);
+        boolean result = articleService.deleteArticle(id);
         return new ResultsDTO<>(result);
     }
 

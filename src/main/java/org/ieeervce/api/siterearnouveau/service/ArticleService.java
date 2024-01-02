@@ -4,14 +4,16 @@ import java.util.List;
 
 import org.ieeervce.api.siterearnouveau.entity.Article;
 import org.ieeervce.api.siterearnouveau.repository.ArticlesRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ArticleService {
     static final String FAILED_TO_DELETE_ARTICLE = "Failed to delete article";
-    @Autowired
-    ArticlesRepository articlesRepository;
+    private ArticlesRepository articlesRepository;
+
+    public ArticleService(ArticlesRepository articlesRepository) {
+        this.articlesRepository = articlesRepository;
+    }
 
     public List<Article> list() {
         return articlesRepository.findAll();
@@ -25,7 +27,7 @@ public class ArticleService {
         return articlesRepository.save(article);
     }
 
-    public Boolean deleteArticle(Integer id) {
+    public boolean deleteArticle(Integer id) {
         try {
             articlesRepository.deleteById(id);
             return true;

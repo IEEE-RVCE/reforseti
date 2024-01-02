@@ -5,13 +5,15 @@ import java.util.Optional;
 
 import org.ieeervce.api.siterearnouveau.entity.Image;
 import org.ieeervce.api.siterearnouveau.repository.ImagesRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ImageService {
-    @Autowired
-    ImagesRepository imagesRepository;
+    private ImagesRepository imagesRepository;
+
+    public ImageService(ImagesRepository imagesRepository) {
+        this.imagesRepository = imagesRepository;
+    }
 
     public List<Image> list(){
         return imagesRepository.findAll();
