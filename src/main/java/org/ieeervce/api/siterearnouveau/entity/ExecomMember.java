@@ -1,6 +1,7 @@
 package org.ieeervce.api.siterearnouveau.entity;
 
-import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,17 +10,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.ToString;
 
 @Entity
-@Table(name="users")
+@Table(name = "execom_members")
 @Data
-public class User implements Serializable {
-    private static final long serialVersionUID = 100L;
+public class ExecomMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "uid")
-    private Integer userId;
+    private Integer id;
 
     @Column(name = "sid")
     private Integer societyId;
@@ -29,18 +27,20 @@ public class User implements Serializable {
 
     @Column(name = "lastname")
     private String lastName;
-    
-    @Column
-    private String email;
-    
-    @Column(name = "pic")
-    @ToString.Exclude
-    private byte[] picture;
 
-    @Column(name = "pwd")
-    @ToString.Exclude
-    private String password;
+    @Column(name = "position")
+    private String position;
 
-    @Column
-    private String role;
+    @Column(name = "imagepath")
+    private String imagePath;
+    
+    @Column(name = "tenurestart")
+    private LocalDate tenureStartDate;
+
+    @Column(name = "tenureend")
+    private LocalDate tenureEndDate;
+
+    @Column(name = "execom_member_uuid")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID memberUuid;
 }

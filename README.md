@@ -1,6 +1,6 @@
 # reforseti
 
-An adventure in Java. Reimplementing `site-rear` in Java, Springboot.
+An adventure in Java. A reimplementation of `site-rear` in Java, Springboot.
 
 Note: This is currently a **POC**. This is **not** intended to replace the current API Server.
 
@@ -11,8 +11,11 @@ Note: This is currently a **POC**. This is **not** intended to replace the curre
 
 ## Requirements
 
-- Use the same DB layout. 
-- Same Auth mechanism
+- Java *17*
+- Postgres DB
+  - It **must** be database-compatible with the existing `site-rear` project. 
+- JWT-based authentication
+  - it **must** be able to use at least the same auth methods as `site-rear`
 
 ## Key differences
 

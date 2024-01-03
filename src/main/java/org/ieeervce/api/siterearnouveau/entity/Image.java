@@ -14,8 +14,8 @@ public class Image {
     @Id
     private int imageId;
 
-    @Column
-    byte[] image;
+    @Column(name="image")
+    private byte[] imageBytes;
 
     @Column(name="ecat")
     private int eventCategory;
