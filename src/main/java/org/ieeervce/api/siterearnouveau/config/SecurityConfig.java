@@ -1,6 +1,8 @@
 package org.ieeervce.api.siterearnouveau.config;
 
 import org.ieeervce.api.siterearnouveau.auth.jwt.JWTAuthenticationFilter;
+import org.ieeervce.api.siterearnouveau.auth.jwt.JWTUtil;
+import org.ieeervce.api.siterearnouveau.service.AuthUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -31,6 +33,11 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JWTAuthenticationFilter jwtAuthenticationFilter(JWTUtil jwtUtil, AuthUserDetailsService authUserDetailsService){
+        return new JWTAuthenticationFilter(jwtUtil,authUserDetailsService);
     }
 
     @Bean
