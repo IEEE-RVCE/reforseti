@@ -1,4 +1,4 @@
-package org.ieeervce.api.siterearnouveau.auth.jwt;
+package org.ieeervce.api.siterearnouveau.jwt;
 
 import java.util.Optional;
 

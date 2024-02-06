@@ -1,7 +1,7 @@
 package org.ieeervce.api.siterearnouveau.config;
 
-import org.ieeervce.api.siterearnouveau.auth.jwt.JWTAuthenticationFilter;
-import org.ieeervce.api.siterearnouveau.auth.jwt.JWTUtil;
+import org.ieeervce.api.siterearnouveau.jwt.JWTAuthenticationFilter;
+import org.ieeervce.api.siterearnouveau.jwt.JWTUtil;
 import org.ieeervce.api.siterearnouveau.service.AuthUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

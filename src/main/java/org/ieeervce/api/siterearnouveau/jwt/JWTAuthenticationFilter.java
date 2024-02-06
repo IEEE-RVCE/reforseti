@@ -1,4 +1,4 @@
-package org.ieeervce.api.siterearnouveau.auth.jwt;
+package org.ieeervce.api.siterearnouveau.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
