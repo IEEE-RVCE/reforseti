@@ -24,7 +24,7 @@ class JWTUtilTest {
     @ParameterizedTest
     @ValueSource(strings = {"", "a", "12345678"})
     void verifyAndGetUserIdWorks(String uidClaim) {
-        String jwt = createJWT(TEST_SIGNING_SECRET, uidClaim);
+        String jwt = createJWTWithUIDClaim(TEST_SIGNING_SECRET, uidClaim);
         Optional<String> jwtClaimOptional = jwtUtil.verifyAndGetUserId(jwt);
         Assertions.assertThat(jwtClaimOptional).contains(uidClaim);
     }
@@ -33,14 +33,27 @@ class JWTUtilTest {
     @ValueSource(strings = {"bcdbcdbcdbcdbcdbcdbcdbcdbcdbcd", "th1SisAverYlongpassphrase"})
     void verifyAndGetUserIdReturnsEmptyWithPassphrase(String passphrase) {
         String uidClaim = "1";
-        String jwt = createJWT(passphrase, uidClaim);
+        String jwt = createJWTWithUIDClaim(passphrase, uidClaim);
 
         Optional<String> jwtClaimOptional = jwtUtil.verifyAndGetUserId(jwt);
         Assertions.assertThat(jwtClaimOptional).isEmpty();
     }
 
+    @Test
+    void verifyAndGetUserIdReturnsEmptyIfNoClaim() {
+        String jwt = createSignedJWTWithoutUIDClaim();
 
-    private String createJWT(String passphrase, String uidClaim) {
+        Optional<String> jwtClaimOptional = jwtUtil.verifyAndGetUserId(jwt);
+        Assertions.assertThat(jwtClaimOptional).isEmpty();
+    }
+
+    private static String createSignedJWTWithoutUIDClaim() {
+        return JWT.create()
+                .sign(Algorithm.HMAC256(JWTUtilTest.TEST_SIGNING_SECRET));
+    }
+
+
+    private String createJWTWithUIDClaim(String passphrase, String uidClaim) {
         return JWT.create()
                 .withClaim("uid", uidClaim)
                 .sign(Algorithm.HMAC256(passphrase));
