@@ -22,6 +22,8 @@ import java.util.Optional;
  */
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
+    private static final String BEARER_HEADER_START = "Bearer ";
+    private static final int HEADER_TOKEN_BEGIN_INDEX = 7;
 
     private final JWTUtil jwtUtil;
     private final AuthUserDetailsService authUserDetailsService;
@@ -56,8 +58,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private Optional<String> mapHeaderValue(String authHeaderValue) {
-        return Optional.of(authHeaderValue).filter(e -> e.startsWith("Bearer ")).map(e -> e.substring(7));
-
+        return Optional.of(authHeaderValue).filter(e -> e.startsWith(BEARER_HEADER_START)).map(e -> e.substring(HEADER_TOKEN_BEGIN_INDEX));
     }
 
 }
