@@ -40,16 +40,21 @@ class JWTUtilTest {
     }
 
     @Test
-    void verifyAndGetUserIdReturnsEmptyIfNoClaim() {
-        String jwt = createSignedJWTWithoutUIDClaim();
+    void verifyAndGetUserIdReturnsEmptyIfInvalidClaim() {
+        String jwt = JWT.create().withClaim("uid", 1)
+                .sign(Algorithm.HMAC256(JWTUtilTest.TEST_SIGNING_SECRET));
 
         Optional<String> jwtClaimOptional = jwtUtil.verifyAndGetUserId(jwt);
         Assertions.assertThat(jwtClaimOptional).isEmpty();
     }
 
-    private static String createSignedJWTWithoutUIDClaim() {
-        return JWT.create()
+    @Test
+    void verifyAndGetUserIdReturnsEmptyIfEmptyClaim() {
+        String jwt = JWT.create()
                 .sign(Algorithm.HMAC256(JWTUtilTest.TEST_SIGNING_SECRET));
+
+        Optional<String> jwtClaimOptional = jwtUtil.verifyAndGetUserId(jwt);
+        Assertions.assertThat(jwtClaimOptional).isEmpty();
     }
 
 
