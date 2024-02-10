@@ -1,7 +1,12 @@
 package org.ieeervce.api.siterearnouveau.jwt;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
+import com.auth0.jwt.JWTCreator;
+import org.ieeervce.api.siterearnouveau.config.JWTProperties;
+import org.ieeervce.api.siterearnouveau.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +21,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
 /**
- * Miscellaneous utils to help work with JWTs
+ * Utils to verify tokens
  */
 @Component
 public class JWTUtil {
@@ -27,16 +32,20 @@ public class JWTUtil {
      * This allows for issues with system time accuracy.
      */
     private static final int JWT_LEEWAY = 10;
+    static final String UID_CLAIM = "uid";
+    public static final String REFORSETI_ISSUER_CLAIM = "reforseti";
     private final String secret;
     private final JWTVerifier jwtVerifier;
 
-    public JWTUtil(@Value("${jwt.secret}") String secret) {
-        this.secret = secret;
+    public JWTUtil(JWTProperties jwtProperties) {
+        this.secret = jwtProperties.getSecret();
         this.jwtVerifier = buildJWTVerifier();
     }
 
+
     /**
      * Verify, and unwrap to get user id in token
+     *
      * @param token encoded JWT token
      * @return User Id if valid JWT
      */
@@ -53,12 +62,12 @@ public class JWTUtil {
         return JWT
                 .require(Algorithm.HMAC256(secret))
                 .acceptLeeway(JWT_LEEWAY)
-                .withClaimPresence("uid")
+                .withClaimPresence(UID_CLAIM)
                 .build();
     }
 
     private Claim extractClaimFromDecodedJWT(DecodedJWT decodedJWT) {
-        return decodedJWT.getClaim("uid");
+        return decodedJWT.getClaim(UID_CLAIM);
     }
 
     private Optional<String> getClaimString(Claim claim) {
@@ -77,5 +86,14 @@ public class JWTUtil {
             LOGGER.debug("Failed to verify JWT token", exception);
             return Optional.empty();
         }
+    }
+
+    public String create(User user) {
+        return JWT.create()
+                .withClaim(UID_CLAIM, user.getUserId().toString())
+                .withIssuedAt(Instant.now())
+                .withIssuer(REFORSETI_ISSUER_CLAIM)
+                .withExpiresAt(Instant.now().plus(1, ChronoUnit.DAYS))
+                .sign(Algorithm.HMAC256(secret));
     }
 }

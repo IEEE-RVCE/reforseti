@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.ieeervce.api.siterearnouveau.auth.AuthUserDetails;
+import org.ieeervce.api.siterearnouveau.service.AuthTokenService;
 import org.ieeervce.api.siterearnouveau.service.AuthUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +25,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
     private static final String BEARER_HEADER_START = "Bearer ";
     private static final int HEADER_TOKEN_BEGIN_INDEX = 7;
+    public static final String AUTH_JWT_REQUEST_ATTRIBUTE = "AUTH_JWT";
 
-    private final JWTUtil jwtUtil;
+    private final AuthTokenService authTokenService;
     private final AuthUserDetailsService authUserDetailsService;
 
-    public JWTAuthenticationFilter(JWTUtil jwtUtil, AuthUserDetailsService authUserDetailsService) {
-        this.jwtUtil = jwtUtil;
+    public JWTAuthenticationFilter(AuthTokenService authTokenService, AuthUserDetailsService authUserDetailsService) {
+        this.authTokenService = authTokenService;
         this.authUserDetailsService = authUserDetailsService;
     }
 
@@ -42,13 +44,14 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 .flatMap(this::mapHeaderValue);
 
 
-        Optional<String> userIdOptional = authHeaderValue.flatMap(jwtUtil::verifyAndGetUserId);
+        Optional<String> userIdOptional = authHeaderValue.flatMap(authTokenService::validateAndGetUserId);
         userIdOptional.ifPresent(userId->{
             AuthUserDetails userDetails = authUserDetailsService.loadUserByUsername(userId);
             SecurityContext securityContext =  SecurityContextHolder.getContext();
 
             if(securityContext.getAuthentication()==null){
-                LOGGER.info("Logging in user_id={}",userIdOptional);
+                LOGGER.debug("Logging in user_id={}",userIdOptional);
+                request.setAttribute(AUTH_JWT_REQUEST_ATTRIBUTE,authHeaderValue.get());
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 securityContext.setAuthentication(usernamePasswordAuthenticationToken);

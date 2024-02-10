@@ -3,7 +3,7 @@
 An adventure in Java. A reimplementation of `site-rear` in Java, Springboot.
 
 Note: This is currently a **POC**. This is **not** intended to replace the current API Server.
-
+Reference API Document: [api-ref.md](https://github.com/IEEE-RVCE/site-rear/blob/master/docs/api-ref.md)
 ## Aims
 
 - Performance test respective APIs

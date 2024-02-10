@@ -1,12 +1,14 @@
 package org.ieeervce.api.siterearnouveau.config;
 
 import org.ieeervce.api.siterearnouveau.jwt.JWTAuthenticationFilter;
-import org.ieeervce.api.siterearnouveau.jwt.JWTUtil;
+import org.ieeervce.api.siterearnouveau.service.AuthTokenService;
 import org.ieeervce.api.siterearnouveau.service.AuthUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -35,9 +37,21 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Re-expose the authentication manager bean within app as a bean so it can be used.
+     * @param authenticationConfiguration
+     * @return
+     * @throws Exception On configuration exception
+     */
     @Bean
-    public JWTAuthenticationFilter jwtAuthenticationFilter(JWTUtil jwtUtil, AuthUserDetailsService authUserDetailsService){
-        return new JWTAuthenticationFilter(jwtUtil,authUserDetailsService);
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+
+    @Bean
+    public JWTAuthenticationFilter jwtAuthenticationFilter(AuthTokenService authTokenService, AuthUserDetailsService authUserDetailsService){
+        return new JWTAuthenticationFilter(authTokenService,authUserDetailsService);
     }
 
     @Bean
@@ -55,6 +69,7 @@ public class SecurityConfig {
 
     private static void getCustomizedHttpAuthorization(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry customizer) {
         customizer
+                .requestMatchers(HttpMethod.POST,"/api/auth").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/**").authenticated()
                 .anyRequest().permitAll();
