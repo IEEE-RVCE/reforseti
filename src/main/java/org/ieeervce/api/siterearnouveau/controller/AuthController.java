@@ -4,17 +4,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.ieeervce.api.siterearnouveau.auth.AuthUserDetails;
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.dto.auth.UsernamePasswordDTO;
-import org.ieeervce.api.siterearnouveau.dto.auth.AuthTokenDTO;
 import org.ieeervce.api.siterearnouveau.entity.AuthToken;
 import org.ieeervce.api.siterearnouveau.entity.User;
 import org.ieeervce.api.siterearnouveau.jwt.JWTAuthenticationFilter;
 import org.ieeervce.api.siterearnouveau.service.AuthTokenService;
-import org.ieeervce.api.siterearnouveau.service.AuthUserDetailsService;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -25,19 +21,21 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
 
-    private final AuthUserDetailsService authUserDetailsService;
     private final AuthTokenService authTokenService;
-    private final ModelMapper modelMapper;
 
-    public AuthController(AuthenticationManager authenticationManager, AuthUserDetailsService authUserDetailsService, AuthTokenService authTokenService, ModelMapper modelMapper) {
+    public AuthController(AuthenticationManager authenticationManager, AuthTokenService authTokenService) {
         this.authenticationManager = authenticationManager;
-        this.authUserDetailsService = authUserDetailsService;
         this.authTokenService = authTokenService;
-        this.modelMapper = modelMapper;
     }
 
+    /**
+     * Login request. Returns a JWT token that contains the userid
+     * @param usernamePasswordDTO Userid and password
+     * @return Token if valid
+     */
     @PostMapping
     ResultsDTO<String> login(@RequestBody UsernamePasswordDTO usernamePasswordDTO) {
+        // FIXME handle .authenticate Exceptions
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(usernamePasswordDTO.getUserId(), usernamePasswordDTO.getPassword()));
         if (authentication.isAuthenticated()) {
             AuthUserDetails authUserDetails = (AuthUserDetails) authentication.getPrincipal();
