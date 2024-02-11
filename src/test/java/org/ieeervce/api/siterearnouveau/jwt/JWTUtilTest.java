@@ -6,26 +6,28 @@ import org.assertj.core.api.Assertions;
 import org.ieeervce.api.siterearnouveau.config.JWTProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.ieeervce.api.siterearnouveau.jwt.JWTUtil.UID_CLAIM;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class JWTUtilTest {
-    private static final String TEST_SIGNING_SECRET = "abcdabcdabcdabcdabcdabcd";
-    @Spy
+    private static final String TEST_SIGNING_SECRET = "lsadikhesuj@OI$Q@OLI$OL!@#OL$";
+    @Mock
     JWTProperties jwtProperties;
-    @InjectMocks
     JWTUtil jwtUtil;
 
     @BeforeEach
     void setUp() {
-        jwtProperties.setSecret(TEST_SIGNING_SECRET);
+        when(jwtProperties.getSecret()).thenReturn(TEST_SIGNING_SECRET);
+        jwtUtil = new JWTUtil(jwtProperties);
     }
 
     @ParameterizedTest
