@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 /**
  * Provide details on User, used by Spring
  */
-public class AuthUserDetails implements UserDetails, CredentialsContainer {
+public class AuthUserDetails implements UserDetails {
     private User user;
 
     @Override
@@ -56,11 +56,6 @@ public class AuthUserDetails implements UserDetails, CredentialsContainer {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public void eraseCredentials() {
-        user.setPassword(null);
     }
 
     public User getUser() {
