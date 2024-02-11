@@ -30,6 +30,7 @@ public class AuthController {
 
     /**
      * Login request. Returns a JWT token that contains the userid
+     *
      * @param usernamePasswordDTO Userid and password
      * @return Token if valid
      */

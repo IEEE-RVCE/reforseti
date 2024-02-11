@@ -46,13 +46,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
 
         Optional<String> userIdOptional = authHeaderValue.flatMap(authTokenService::validateAndGetUserId);
-        userIdOptional.flatMap(this::loadAuthUserFromUserId).ifPresent(authUserDetails->{
-            SecurityContext securityContext =  SecurityContextHolder.getContext();
+        userIdOptional.flatMap(this::loadAuthUserFromUserId).ifPresent(authUserDetails -> {
+            SecurityContext securityContext = SecurityContextHolder.getContext();
 
-            if(securityContext.getAuthentication()==null){
-                LOGGER.debug("Logging in user_id={}",userIdOptional);
-                request.setAttribute(AUTH_JWT_REQUEST_ATTRIBUTE,authHeaderValue.get());
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authUserDetails,null,authUserDetails.getAuthorities());
+            if (securityContext.getAuthentication() == null) {
+                LOGGER.debug("Logging in user_id={}", userIdOptional);
+                request.setAttribute(AUTH_JWT_REQUEST_ATTRIBUTE, authHeaderValue.get());
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authUserDetails, null, authUserDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 securityContext.setAuthentication(usernamePasswordAuthenticationToken);
             }
