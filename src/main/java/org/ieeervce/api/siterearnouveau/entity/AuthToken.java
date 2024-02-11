@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "atokens")
 public class AuthToken {
     @ManyToOne(cascade = CascadeType.REMOVE, optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "uid", updatable = false, nullable = false, unique = false, referencedColumnName = "uid")
+    @JoinColumn(name = "uid", updatable = false, nullable = false, referencedColumnName = "uid")
     private User user;
     @Column(unique = true,name="atoken")
     @Id
