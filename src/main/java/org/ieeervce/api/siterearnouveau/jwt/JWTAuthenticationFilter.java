@@ -22,10 +22,11 @@ import java.util.Optional;
  * Once per filter to add jwt authentication details
  */
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
+    public static final String AUTH_JWT_REQUEST_ATTRIBUTE = "AUTH_JWT";
     private static final Logger LOGGER = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
+    static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     private static final String BEARER_HEADER_START = "Bearer ";
     private static final int HEADER_TOKEN_BEGIN_INDEX = 7;
-    public static final String AUTH_JWT_REQUEST_ATTRIBUTE = "AUTH_JWT";
 
     private final AuthTokenService authTokenService;
     private final AuthUserDetailsService authUserDetailsService;
@@ -40,7 +41,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         LOGGER.debug("Verifying JWT header");
         Optional<String> authHeaderValue = Optional
-                .ofNullable(request.getHeader("Authorization"))
+                .ofNullable(request.getHeader(AUTHORIZATION_HEADER_NAME))
                 .flatMap(this::mapHeaderValue);
 
 
