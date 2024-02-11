@@ -29,7 +29,7 @@ public class SecurityConfig {
      * Password encoder to use for decoding and encoding passwords.
      * <p>
      * Using Bcrypt as it is the existing password encoder.
-     * 
+     *
      * @return Bcrypt password encoder
      */
     @Bean
@@ -39,6 +39,7 @@ public class SecurityConfig {
 
     /**
      * Re-expose the authentication manager bean within app as a bean so it can be used.
+     *
      * @param authenticationConfiguration
      * @return
      * @throws Exception On configuration exception
@@ -50,18 +51,18 @@ public class SecurityConfig {
 
 
     @Bean
-    public JWTAuthenticationFilter jwtAuthenticationFilter(AuthTokenService authTokenService, AuthUserDetailsService authUserDetailsService){
-        return new JWTAuthenticationFilter(authTokenService,authUserDetailsService);
+    public JWTAuthenticationFilter jwtAuthenticationFilter(AuthTokenService authTokenService, AuthUserDetailsService authUserDetailsService) {
+        return new JWTAuthenticationFilter(authTokenService, authUserDetailsService);
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(JWTAuthenticationFilter jwtAuthenticationFilter,HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(JWTAuthenticationFilter jwtAuthenticationFilter, HttpSecurity httpSecurity) throws Exception {
         // FIXME re-enable cors
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(SecurityConfig::getCustomizedHttpAuthorization)
                 .sessionManagement(SecurityConfig::customizeSessionManagement)
-                .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
         return httpSecurity.build();
@@ -69,7 +70,7 @@ public class SecurityConfig {
 
     private static void getCustomizedHttpAuthorization(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry customizer) {
         customizer
-                .requestMatchers(HttpMethod.POST,"/api/auth").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/**").authenticated()
                 .anyRequest().permitAll();
