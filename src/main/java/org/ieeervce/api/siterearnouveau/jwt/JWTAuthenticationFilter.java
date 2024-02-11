@@ -46,14 +46,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
 
         Optional<String> userIdOptional = authHeaderValue.flatMap(authTokenService::validateAndGetUserId);
-        userIdOptional.ifPresent(userId->{
-            AuthUserDetails userDetails = authUserDetailsService.loadUserByUsername(userId);
+        userIdOptional.flatMap(this::loadAuthUserFromUserId).ifPresent(authUserDetails->{
             SecurityContext securityContext =  SecurityContextHolder.getContext();
 
             if(securityContext.getAuthentication()==null){
                 LOGGER.debug("Logging in user_id={}",userIdOptional);
                 request.setAttribute(AUTH_JWT_REQUEST_ATTRIBUTE,authHeaderValue.get());
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authUserDetails,null,authUserDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 securityContext.setAuthentication(usernamePasswordAuthenticationToken);
             }
@@ -65,4 +64,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         return Optional.of(authHeaderValue).filter(e -> e.startsWith(BEARER_HEADER_START)).map(e -> e.substring(HEADER_TOKEN_BEGIN_INDEX));
     }
 
+    private Optional<? extends AuthUserDetails> loadAuthUserFromUserId(String userId) {
+        return Optional.ofNullable(authUserDetailsService.loadUserByUsername(userId));
+    }
 }

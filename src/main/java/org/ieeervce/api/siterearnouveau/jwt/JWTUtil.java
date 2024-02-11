@@ -1,24 +1,21 @@
 package org.ieeervce.api.siterearnouveau.jwt;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Optional;
-
-import com.auth0.jwt.JWTCreator;
-import org.ieeervce.api.siterearnouveau.config.JWTProperties;
-import org.ieeervce.api.siterearnouveau.entity.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import org.ieeervce.api.siterearnouveau.config.JWTProperties;
+import org.ieeervce.api.siterearnouveau.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 /**
  * Utils to verify tokens
@@ -33,7 +30,7 @@ public class JWTUtil {
      */
     private static final int JWT_LEEWAY = 10;
     static final String UID_CLAIM = "uid";
-    public static final String REFORSETI_ISSUER_CLAIM = "reforseti";
+    static final String REFORSETI_ISSUER_CLAIM = "reforseti";
     private final String secret;
     private final JWTVerifier jwtVerifier;
 
