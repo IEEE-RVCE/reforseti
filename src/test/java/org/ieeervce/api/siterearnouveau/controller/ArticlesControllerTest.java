@@ -1,14 +1,6 @@
 package org.ieeervce.api.siterearnouveau.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.nio.charset.Charset;
-import java.time.LocalDateTime;
-import java.util.Collections;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.ieeervce.api.siterearnouveau.dto.article.ArticleDTO;
 import org.ieeervce.api.siterearnouveau.entity.Article;
@@ -26,8 +18,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.Charset;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Optional;
+
+import static org.ieeervce.api.siterearnouveau.controller.ArticlesController.ARTICLE_NOT_FOUND;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class ArticlesControllerTest {
@@ -120,7 +122,7 @@ class ArticlesControllerTest {
     }
 
     @Test
-    void testCreateArticle() throws JsonProcessingException, Exception {
+    void testCreateArticle() throws Exception {
         Integer articleId = 1;
         Integer eventCategory = 45;
         String title = "Article " + 1;
@@ -160,7 +162,7 @@ class ArticlesControllerTest {
     }
 
     @Test
-    void testDeleteArticle() throws JsonProcessingException, Exception {
+    void testDeleteArticle() throws Exception {
         Integer articleId = 1;
 
         when(articleService.deleteArticle(articleId)).thenReturn(true);
@@ -171,6 +173,77 @@ class ArticlesControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
                 .andExpect(jsonPath("$.response", Matchers.equalTo(true)));
+    }
+
+    @Test
+    void testEditArticle() throws Exception {
+        Integer articleId = 1;
+        Integer eventCategory = 45;
+        String title = "Article " + 1;
+        String author = "Author " + 1;
+        String content = "Content " + 1;
+
+        ArticleDTO article = new ArticleDTO();
+
+        article.setTitle(title);
+        article.setAuthor(author);
+        article.setEventCategory(eventCategory);
+        article.setKeywords(KEYWORD_SET);
+        article.setContent(content);
+
+        Article articleSaved = modelMapper.map(article, Article.class);
+        articleSaved.setArticleId(articleId);
+        articleSaved.setAddedDateTime(LocalDateTime.now());
+
+        when(articleService.editArticle(eq(articleId),any())).thenReturn(Optional.of(articleSaved));
+
+        mvc.perform(
+                        put("/api/article/{articleId}",articleId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(article).getBytes(Charset.defaultCharset())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
+                .andExpect(jsonPath("$.response", Matchers.notNullValue()))
+
+                .andExpect(jsonPath("$.response.articleId", Matchers.equalTo(articleId)))
+                .andExpect(jsonPath("$.response.eventCategory", Matchers.equalTo(eventCategory)))
+                .andExpect(jsonPath("$.response.author", Matchers.equalTo(author)))
+                .andExpect(jsonPath("$.response.addedDateTime", Matchers.notNullValue()))
+                .andExpect(jsonPath("$.response.content", Matchers.equalTo(content)))
+                .andExpect(jsonPath("$.response.keywords", Matchers.equalTo(KEYWORD_SET)))
+                .andExpect(jsonPath("$.response.title", Matchers.equalTo(title)));
+    }
+
+    @Test
+    void testEditArticleReturnsFalseOnNoArticle() throws Exception {
+        Integer articleId = 1;
+        Integer eventCategory = 45;
+        String title = "Article " + 1;
+        String author = "Author " + 1;
+        String content = "Content " + 1;
+
+        ArticleDTO article = new ArticleDTO();
+
+        article.setTitle(title);
+        article.setAuthor(author);
+        article.setEventCategory(eventCategory);
+        article.setKeywords(KEYWORD_SET);
+        article.setContent(content);
+
+        Article articleSaved = modelMapper.map(article, Article.class);
+        articleSaved.setArticleId(articleId);
+        articleSaved.setAddedDateTime(LocalDateTime.now());
+
+        when(articleService.editArticle(eq(articleId),any())).thenReturn(Optional.empty());
+
+        mvc.perform(
+                        put("/api/article/{articleId}",articleId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(article).getBytes(Charset.defaultCharset())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ok", Matchers.equalTo(false)))
+                .andExpect(jsonPath("$.response", Matchers.nullValue()))
+                .andExpect(jsonPath("$.message",Matchers.equalTo(ARTICLE_NOT_FOUND)));
     }
 
 }
