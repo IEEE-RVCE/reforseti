@@ -1,17 +1,5 @@
 package org.ieeervce.api.siterearnouveau.service;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import org.ieeervce.api.siterearnouveau.entity.Article;
 import org.ieeervce.api.siterearnouveau.repository.ArticlesRepository;
 import org.junit.jupiter.api.Test;
@@ -21,8 +9,17 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
+    public static final int EXAMPLE_ARTICLE_ID = 1;
     static final int ARTICLE_ID = 1;
     @Mock
     ArticlesRepository articlesRepository;
@@ -67,21 +64,43 @@ class ArticleServiceTest {
 
     @Test
     void testDelete() {
-        int id = 1;
-        articleService.deleteArticle(id);
-        verify(articlesRepository).deleteById(id);
+        articleService.deleteArticle(EXAMPLE_ARTICLE_ID);
+        verify(articlesRepository).deleteById(EXAMPLE_ARTICLE_ID);
     }
 
     @Test
     void testDeleteThrowsRuntimeExceptionOnFailure() {
-        int id = 1;
-        doThrow(new IllegalArgumentException("Something went wrong")).when(articlesRepository).deleteById(id);
+        doThrow(new IllegalArgumentException("Something went wrong")).when(articlesRepository).deleteById(EXAMPLE_ARTICLE_ID);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> {
-            articleService.deleteArticle(id);
+            articleService.deleteArticle(EXAMPLE_ARTICLE_ID);
         });
 
         assertTrue(runtimeException.getMessage().contains(ArticleService.FAILED_TO_DELETE_ARTICLE));
-        verify(articlesRepository).deleteById(id);
+        verify(articlesRepository).deleteById(EXAMPLE_ARTICLE_ID);
+    }
+
+    @Test
+    void testUpdate(){
+        when(articlesRepository.existsById(EXAMPLE_ARTICLE_ID)).thenReturn(true);
+        doReturn(article1).when(articlesRepository).save(article1);
+
+        Optional<Article> articleOptional = articleService.editArticle(EXAMPLE_ARTICLE_ID,article1);
+
+        assertThat(articleOptional).isPresent().contains(article1);
+
+        verify(articlesRepository).save(article1);
+        verify(article1).setArticleId(EXAMPLE_ARTICLE_ID);
+    }
+
+    @Test
+    void testUpdateIfArticleNotFound(){
+        when(articlesRepository.existsById(EXAMPLE_ARTICLE_ID)).thenReturn(false);
+        Optional<Article> articleOptional = articleService.editArticle(EXAMPLE_ARTICLE_ID,article1);
+
+        assertThat(articleOptional).isEmpty();
+
+        verify(articlesRepository,never()).save(article1);
+
     }
 }
