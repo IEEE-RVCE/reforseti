@@ -109,7 +109,7 @@ class ImagesControllerTest {
     }
 
     @Test
-    void testGetImageBytesNotFound() throws Exception {
+    void testGetImageBytesNotFound() {
         when(imageService.getBytesByImageId(IMAGE_ID)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() ->
