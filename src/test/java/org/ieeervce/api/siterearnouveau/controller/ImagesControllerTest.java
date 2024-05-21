@@ -65,8 +65,30 @@ class ImagesControllerTest {
 
     @Test
     void testListAllEmpty() throws Exception {
+        when(imageService.list()).thenReturn(Collections.emptyList());
+        mockMvc.perform(get("/api/image"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.ok", equalTo(true)))
+                .andExpect(jsonPath("$.response", iterableWithSize(0)));
+    }
+
+    @Test
+    void testListAll() throws Exception {
         when(imageService.list()).thenReturn(Collections.singletonList(image));
         mockMvc.perform(get("/api/image"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.ok", equalTo(true)))
+                .andExpect(jsonPath("$.response", iterableWithSize(1)))
+                .andExpect(jsonPath("$.response[0].imageId", equalTo(IMAGE_ID)))
+                .andExpect(jsonPath("$.response[0].eventCategory", equalTo(EVENT_CATEGORY)))
+                .andExpect(jsonPath("$.response[0].altText", equalTo(ALT_TEXT)));
+    }
+
+    @Test
+    void testListByCategory() throws Exception {
+        int imageCategory = 1;
+        when(imageService.listByCategory(imageCategory)).thenReturn(Collections.singletonList(image));
+        mockMvc.perform(get("/api/image/category/{imageCategory}",imageCategory))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.ok", equalTo(true)))
                 .andExpect(jsonPath("$.response", iterableWithSize(1)))
