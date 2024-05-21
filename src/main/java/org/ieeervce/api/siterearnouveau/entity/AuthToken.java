@@ -1,9 +1,11 @@
 package org.ieeervce.api.siterearnouveau.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "atokens")
+@Data
 public class AuthToken {
     @ManyToOne(cascade = CascadeType.REMOVE, optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "uid", updatable = false, nullable = false, referencedColumnName = "uid")
@@ -11,21 +13,4 @@ public class AuthToken {
     @Column(unique = true,name="atoken")
     @Id
     private String token;
-
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 }

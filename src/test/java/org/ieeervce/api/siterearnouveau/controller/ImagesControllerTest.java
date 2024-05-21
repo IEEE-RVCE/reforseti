@@ -1,14 +1,7 @@
 package org.ieeervce.api.siterearnouveau.controller;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.iterableWithSize;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
-import java.util.Collections;
-import java.util.Optional;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletException;
 import org.ieeervce.api.siterearnouveau.entity.Image;
 import org.ieeervce.api.siterearnouveau.service.ImageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,13 +17,21 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.iterableWithSize;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ExtendWith(MockitoExtension.class)
 class ImagesControllerTest {
     private static final int IMAGE_ID = 1;
 
-    private static final byte[] IMAGE_BYTES = new byte[]{2,3};
+    private static final byte[] IMAGE_BYTES = new byte[]{2, 3};
 
     private static final int EVENT_CATEGORY = 4;
 
@@ -88,7 +89,7 @@ class ImagesControllerTest {
     void testListByCategory() throws Exception {
         int imageCategory = 1;
         when(imageService.listByCategory(imageCategory)).thenReturn(Collections.singletonList(image));
-        mockMvc.perform(get("/api/image/category/{imageCategory}",imageCategory))
+        mockMvc.perform(get("/api/image/category/{imageCategory}", imageCategory))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.ok", equalTo(true)))
                 .andExpect(jsonPath("$.response", iterableWithSize(1)))
@@ -96,13 +97,24 @@ class ImagesControllerTest {
                 .andExpect(jsonPath("$.response[0].eventCategory", equalTo(EVENT_CATEGORY)))
                 .andExpect(jsonPath("$.response[0].altText", equalTo(ALT_TEXT)));
     }
+
     @Test
     void testGetImageBytes() throws Exception {
         when(imageService.getBytesByImageId(IMAGE_ID)).thenReturn(Optional.of(IMAGE_BYTES));
-        
-        mockMvc.perform(get("/api/image/{imageId}",IMAGE_ID))
+
+        mockMvc.perform(get("/api/image/{imageId}", IMAGE_ID))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_OCTET_STREAM))
                 .andExpect(MockMvcResultMatchers.content().bytes(IMAGE_BYTES));
+    }
+
+    @Test
+    void testGetImageBytesNotFound() throws Exception {
+        when(imageService.getBytesByImageId(IMAGE_ID)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() ->
+                mockMvc.perform(get("/api/image/{imageId}", IMAGE_ID))
+        ).isNotNull().isInstanceOf(ServletException.class).cause().hasMessage("Not found");
+
     }
 }
