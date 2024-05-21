@@ -33,18 +33,18 @@ class AuthTokenServiceTest {
     AuthTokenService authTokenService;
 
     @Test
-    void testJWTCreation(){
+    void testJWTCreation() {
 
         when(jwtUtil.create(user)).thenReturn(EXAMPLE_JWT);
-        when(authTokenRepository.save(any())).thenAnswer((invocation)-> invocation.getArgument(0, AuthToken.class));
+        when(authTokenRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0, AuthToken.class));
         AuthToken token = authTokenService.create(user);
-        assertThat(token).hasFieldOrPropertyWithValue("token",EXAMPLE_JWT)
-                .hasFieldOrPropertyWithValue("user",user);
+        assertThat(token).hasFieldOrPropertyWithValue("token", EXAMPLE_JWT)
+                .hasFieldOrPropertyWithValue("user", user);
 
     }
 
     @Test
-    void testJWTValidateAndGetUserId(){
+    void testJWTValidateAndGetUserId() {
         when(jwtUtil.verifyAndGetUserId(EXAMPLE_JWT)).thenReturn(Optional.of(EXAMPLE_UID_STRING));
         when(authTokenRepository.existsByUidAndToken(EXAMPLE_UID, EXAMPLE_JWT)).thenReturn(true);
 

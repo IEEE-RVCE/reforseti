@@ -1,14 +1,7 @@
 package org.ieeervce.api.siterearnouveau.controller;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.iterableWithSize;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Collections;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ieeervce.api.siterearnouveau.entity.Event;
 import org.ieeervce.api.siterearnouveau.service.EventsService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,9 +14,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.iterableWithSize;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class EventsControllerTest {
@@ -47,7 +45,7 @@ class EventsControllerTest {
     MockMvc mvc;
 
     @BeforeEach
-    void setup() throws JsonMappingException, JsonProcessingException {
+    void setup() throws JsonProcessingException {
         mvc = MockMvcBuilders.standaloneSetup(eventsController).build();
         event.setEventId(EVENT_ID);
         event.setKeywords(KEYWORDS);
