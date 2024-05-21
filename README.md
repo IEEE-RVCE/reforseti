@@ -48,5 +48,5 @@ Reference API Document: [api-ref.md](https://github.com/IEEE-RVCE/site-rear/blob
 
 ## Current Implementation Notes ~~Hacks~~
 
-- No JWT Auth. Only Basic auth is supported.
+- JWT and Basic auth supported
 - CORS is disabled.
