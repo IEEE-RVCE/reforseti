@@ -1,11 +1,11 @@
 package org.ieeervce.api.siterearnouveau.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.ieeervce.api.siterearnouveau.entity.Image;
 import org.ieeervce.api.siterearnouveau.repository.ImagesRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ImageService {
@@ -17,6 +17,10 @@ public class ImageService {
 
     public List<Image> list(){
         return imagesRepository.findAll();
+    }
+
+    public List<Image> listByCategory(int eventCategory){
+        return imagesRepository.findByEventCategory(eventCategory);
     }
 
     /**

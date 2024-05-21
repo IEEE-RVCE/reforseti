@@ -37,6 +37,19 @@ class ImagesServiceTest {
     }
 
     @Test
+    void testListByCategory() {
+        int imageCategory = 1;
+        when(imageRepository.findByEventCategory(imageCategory)).thenReturn(Collections.singletonList(image));
+        var imageList = imageService.listByCategory(1);
+        assertThat(imageList)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(1)
+                .first()
+                .isSameAs(image);
+    }
+
+    @Test
     void testGetBytes() {
         when(imageRepository.findById(IMAGE_ID)).thenReturn(Optional.of(image));
         when(image.getImageBytes()).thenReturn(IMAGE_BYTES);
