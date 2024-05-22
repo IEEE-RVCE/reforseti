@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SiteRearNouveauApplication {
 	static final String IEEE_RVCE = "IEEE-RVCE";
 
-	@GetMapping("")
+	@GetMapping
 	String mainEndpoint() {
 		return IEEE_RVCE;
 	}

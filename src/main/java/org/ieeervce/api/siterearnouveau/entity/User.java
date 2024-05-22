@@ -1,5 +1,6 @@
 package org.ieeervce.api.siterearnouveau.entity;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import jakarta.persistence.Column;
@@ -15,6 +16,7 @@ import lombok.ToString;
 @Table(name="users")
 @Data
 public class User implements Serializable {
+    @Serial
     private static final long serialVersionUID = 100L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
