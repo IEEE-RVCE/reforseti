@@ -1,6 +1,7 @@
 package org.ieeervce.api.siterearnouveau.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
@@ -64,5 +65,11 @@ class ImagesServiceTest {
         Optional<byte[]> imageBytesReturned = imageService.getBytesByImageId(IMAGE_ID);
 
         assertThat(imageBytesReturned).isEmpty();
+    }
+
+    @Test
+    void testDelete(){
+        imageService.delete(IMAGE_ID);
+        verify(imageRepository).deleteById(IMAGE_ID);
     }
 }

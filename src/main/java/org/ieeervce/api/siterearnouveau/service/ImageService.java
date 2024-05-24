@@ -3,6 +3,7 @@ package org.ieeervce.api.siterearnouveau.service;
 import org.ieeervce.api.siterearnouveau.entity.Image;
 import org.ieeervce.api.siterearnouveau.repository.ImagesRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,5 +31,14 @@ public class ImageService {
      */
     public Optional<byte[]> getBytesByImageId(int imageId){
         return imagesRepository.findById(imageId).map(Image::getImageBytes);
+    }
+    public void delete(int imageId){
+        imagesRepository.deleteById(imageId);
+    }
+
+    public Image createOrUpdate(Image image) {
+        Assert.notNull(image.getImageBytes(),"Image cannot be empty");
+
+        return imagesRepository.save(image);
     }
 }
