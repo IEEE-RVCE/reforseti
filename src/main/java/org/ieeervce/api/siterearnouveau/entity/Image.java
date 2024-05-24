@@ -1,26 +1,24 @@
 package org.ieeervce.api.siterearnouveau.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name="images")
+@Table(name = "images")
 @Data
 public class Image {
-    @Column(name="iid")
+    @Column(name = "iid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int imageId;
+    private Integer imageId;
 
-    @Column(name="image")
+    @Column(name = "image")
     private byte[] imageBytes;
 
-    @Column(name="ecat")
+    @Column(name = "ecat")
     private int eventCategory;
 
-    @Column(name="alt")
+    @Column(name = "alt")
     private String altText;
-    
+
 }

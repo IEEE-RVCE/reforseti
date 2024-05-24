@@ -1,7 +1,8 @@
 package org.ieeervce.api.siterearnouveau.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -16,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class ImagesServiceTest {
-    private static final byte[] IMAGE_BYTES = new byte[] { 1, 2 };
+    private static final byte[] IMAGE_BYTES = new byte[]{1, 2};
 
     private static final Integer IMAGE_ID = 1;
 
@@ -64,5 +65,30 @@ class ImagesServiceTest {
         Optional<byte[]> imageBytesReturned = imageService.getBytesByImageId(IMAGE_ID);
 
         assertThat(imageBytesReturned).isEmpty();
+    }
+
+    @Test
+    void testDelete() {
+        imageService.delete(IMAGE_ID);
+        verify(imageRepository).deleteById(IMAGE_ID);
+    }
+
+    @Test
+    void testCreateOrUpdateEmptyImage() {
+        assertThatThrownBy(() -> imageService.createOrUpdate(image))
+                .isInstanceOf(IllegalArgumentException.class);
+        verify(imageRepository, never()).save(image);
+    }
+
+    @Test
+    void testCreateOrUpdate() {
+        Image savedImage = mock(Image.class);
+        when(imageRepository.save(image)).thenReturn(savedImage);
+        when(image.getImageBytes()).thenReturn(new byte[]{1, 2, 3});
+        Image returnedImage = imageService.createOrUpdate(image);
+
+        assertThat(returnedImage)
+                .isNotNull()
+                .isSameAs(savedImage);
     }
 }
