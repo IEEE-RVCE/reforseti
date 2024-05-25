@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.iterableWithSize;
@@ -30,7 +31,7 @@ class EventsControllerTest {
     private static final int EVENT_ID = 1;
     private static final String HOST_NAME = "abcd efgh";
 
-    private static final String EXAMPLE_HOSTS_TREE_STRING = String.format("{\"name\":\"%s\"}",HOST_NAME);
+    List<Event.Host> exampleHostsList = Collections.singletonList(new Event.Host());
 
     @Mock
     EventsService eventsService;
@@ -49,7 +50,8 @@ class EventsControllerTest {
         mvc = MockMvcBuilders.standaloneSetup(eventsController).build();
         event.setEventId(EVENT_ID);
         event.setKeywords(KEYWORDS);
-        event.setHosts(objectMapper.readTree(EXAMPLE_HOSTS_TREE_STRING));
+        event.setHosts(exampleHostsList);
+        exampleHostsList.get(0).setName(HOST_NAME);
     }
 
     @Test
@@ -61,7 +63,7 @@ class EventsControllerTest {
                 .andExpect(jsonPath("$.response", iterableWithSize(1)))
                 .andExpect(jsonPath("$.response[0].eventId",equalTo(EVENT_ID)))
                 .andExpect(jsonPath("$.response[0].keywords",equalTo(KEYWORDS)))
-                .andExpect(jsonPath("$.response[0].hosts.name",equalTo(HOST_NAME)));
+                .andExpect(jsonPath("$.response[0].hosts[0].name",equalTo(HOST_NAME)));
 
     }
 

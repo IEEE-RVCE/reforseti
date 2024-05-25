@@ -1,11 +1,10 @@
 package org.ieeervce.api.siterearnouveau.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -55,7 +54,17 @@ public class Event {
     private String brochurelink;
     @Column
     @JdbcTypeCode(value = SqlTypes.JSON)
-    private JsonNode hosts;
+    private List<Host> hosts;
     @Column
     private String keywords;
+
+    @Data
+    public static class Host {
+        private String name;
+        /**
+         * Picture link
+         */
+        private String piclink;
+        private String details;
+    }
 }
