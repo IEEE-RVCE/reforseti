@@ -48,7 +48,7 @@ class EventsControllerTest {
     MockMvc mvc;
 
     @BeforeEach
-    void setup() throws JsonProcessingException {
+    void setup() {
         mvc = MockMvcBuilders.standaloneSetup(eventsController).build();
         event.setEventId(EVENT_ID);
         event.setKeywords(KEYWORDS);
