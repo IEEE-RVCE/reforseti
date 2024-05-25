@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.dto.article.ArticleDTO;
 import org.ieeervce.api.siterearnouveau.entity.Article;
+import org.ieeervce.api.siterearnouveau.exception.DataNotFoundException;
 import org.ieeervce.api.siterearnouveau.service.ArticleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/article")
 public class ArticlesController {
-    static final String ARTICLE_NOT_FOUND = "Article not found";
     private final ArticleService articleService;
     private final ModelMapper modelMapper;
 
@@ -42,11 +42,10 @@ public class ArticlesController {
     }
 
     @PutMapping("/{articleId}")
-    ResultsDTO<Article> edit(@PathVariable int articleId,@RequestBody ArticleDTO articleDTO){
+    ResultsDTO<Article> edit(@PathVariable int articleId,@RequestBody ArticleDTO articleDTO) throws DataNotFoundException {
         Article article = modelMapper.map(articleDTO, Article.class);
         Optional<Article> updatedArticle = articleService.editArticle(articleId,article);
-        // FIXME extract to an exception
-        return updatedArticle.map(ResultsDTO::new).orElseGet(() -> new ResultsDTO<>(false, null, ARTICLE_NOT_FOUND));
+        return updatedArticle.map(ResultsDTO::new).orElseThrow(DataNotFoundException::new);
     }
 
     @DeleteMapping("/{id}")
