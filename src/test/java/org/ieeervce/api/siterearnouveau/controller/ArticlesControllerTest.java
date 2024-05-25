@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.ieeervce.api.siterearnouveau.controller.ArticlesController.ARTICLE_NOT_FOUND;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -240,10 +239,7 @@ class ArticlesControllerTest {
                         put("/api/article/{articleId}",articleId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(article).getBytes(Charset.defaultCharset())))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.ok", Matchers.equalTo(false)))
-                .andExpect(jsonPath("$.response", Matchers.nullValue()))
-                .andExpect(jsonPath("$.message",Matchers.equalTo(ARTICLE_NOT_FOUND)));
+                .andExpect(status().isNotFound());
     }
 
 }

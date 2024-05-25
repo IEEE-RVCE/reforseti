@@ -135,11 +135,7 @@ class ImagesControllerTest {
     @Test
     void testCreateImage() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile(IMAGE_PARAM_NAME, IMAGE_BYTES_ARRAY);
-        Image expectedResponseImage = new Image();
-        expectedResponseImage.setImageId(IMAGE_ID);
-        expectedResponseImage.setImageBytes(IMAGE_BYTES_ARRAY);
-        expectedResponseImage.setAltText(IMAGE_ALT_TEXT);
-        expectedResponseImage.setEventCategory(IMAGE_CATEGORY_ID);
+        Image expectedResponseImage = getExpectedResponseImage();
         when(imageService.createOrUpdate(createdImageCaptor.capture())).thenReturn(expectedResponseImage);
 
         mockMvc.perform(
@@ -168,11 +164,7 @@ class ImagesControllerTest {
     @Test
     void testUpdateImage() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile(IMAGE_PARAM_NAME, IMAGE_BYTES_ARRAY);
-        Image expectedResponseImage = new Image();
-        expectedResponseImage.setImageId(IMAGE_ID);
-        expectedResponseImage.setImageBytes(IMAGE_BYTES_ARRAY);
-        expectedResponseImage.setAltText(IMAGE_ALT_TEXT);
-        expectedResponseImage.setEventCategory(IMAGE_CATEGORY_ID);
+        Image expectedResponseImage = getExpectedResponseImage();
         when(imageService.createOrUpdate(createdImageCaptor.capture())).thenReturn(expectedResponseImage);
 
         mockMvc.perform(
@@ -209,5 +201,15 @@ class ImagesControllerTest {
             request.setMethod(httpMethod.name());
             return request;
         };
+    }
+
+
+    private Image getExpectedResponseImage() {
+        Image expectedResponseImage = new Image();
+        expectedResponseImage.setImageId(IMAGE_ID);
+        expectedResponseImage.setImageBytes(IMAGE_BYTES_ARRAY);
+        expectedResponseImage.setAltText(IMAGE_ALT_TEXT);
+        expectedResponseImage.setEventCategory(IMAGE_CATEGORY_ID);
+        return expectedResponseImage;
     }
 }
