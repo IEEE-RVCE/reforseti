@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.iterableWithSize;
@@ -30,6 +31,7 @@ class EventsControllerTest {
 
     private static final int EVENT_ID = 1;
     private static final String HOST_NAME = "abcd efgh";
+    private static final int CATEGORY_ID = 20;
 
     List<Event.Host> exampleHostsList = Collections.singletonList(new Event.Host());
 
@@ -65,6 +67,37 @@ class EventsControllerTest {
                 .andExpect(jsonPath("$.response[0].keywords",equalTo(KEYWORDS)))
                 .andExpect(jsonPath("$.response[0].hosts[0].name",equalTo(HOST_NAME)));
 
+    }
+
+    @Test
+    void testListByCategory() throws Exception {
+        when(eventsService.listByCategory(CATEGORY_ID)).thenReturn(Collections.singletonList(event));
+        mvc.perform(get("/api/event/category/{categoryId}",CATEGORY_ID))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ok", equalTo(true)))
+                .andExpect(jsonPath("$.response", iterableWithSize(1)))
+                .andExpect(jsonPath("$.response[0].eventId",equalTo(EVENT_ID)))
+                .andExpect(jsonPath("$.response[0].keywords",equalTo(KEYWORDS)))
+                .andExpect(jsonPath("$.response[0].hosts[0].name",equalTo(HOST_NAME)));
+
+    }
+
+    @Test
+    void testGet() throws Exception {
+        when(eventsService.getById(EVENT_ID)).thenReturn(Optional.of(event));
+        mvc.perform(get("/api/event/{eventId}",EVENT_ID))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ok", equalTo(true)))
+                .andExpect(jsonPath("$.response.eventId",equalTo(EVENT_ID)))
+                .andExpect(jsonPath("$.response.keywords",equalTo(KEYWORDS)))
+                .andExpect(jsonPath("$.response.hosts[0].name",equalTo(HOST_NAME)));
+
+    }
+    @Test
+    void testGetNotFound() throws Exception {
+        when(eventsService.getById(EVENT_ID)).thenReturn(Optional.empty());
+        mvc.perform(get("/api/event/{eventId}",EVENT_ID))
+                .andExpect(status().isNotFound());
     }
 
 }
