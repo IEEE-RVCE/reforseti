@@ -121,6 +121,7 @@ class SocietiesControllerTest {
         Society societySaved = createTestSociety(SOCIETY_GENERATED_ID_1, SOCIETY_REFERENCE_ID_1, false);
         SocietyDTO societyDTO = modelMapper.map(societyPendingSave,SocietyDTO.class);
         String societyDTOJsonString = objectMapper.writeValueAsString(societyDTO);
+        when(societyService.getByActualSocietyId(anyShort())).thenReturn(Optional.of(societySaved));
         when(societyService.createOrUpdate(any())).thenReturn(societySaved);
         mockMvc.perform(
                         put("/api/society/{sid}", SOCIETY_REFERENCE_ID_1)
@@ -137,6 +138,15 @@ class SocietiesControllerTest {
                 .andExpect(jsonPath("$.response.descriptionText", equalTo(SOCIETY_DESCRIPTION)))
                 .andExpect(jsonPath("$.response.referenceId", equalTo(Short.toUnsignedInt( SOCIETY_REFERENCE_ID_1))))
                 .andExpect(jsonPath("$.response.affinity", equalTo(false)));
+        // once for mock, once for update
+        verify(societySaved, times(2)).setSocietyName(any());
+        verify(societySaved, times(2)).setVision(any());
+        verify(societySaved, times(2)).setMission(any());
+        verify(societySaved, times(2)).setDescriptionText(any());
+        verify(societySaved, times(2)).setReferenceId(anyShort());
+        verify(societySaved, times(2)).setAffinity(false);
+        // once for mock only
+        verify(societySaved).setGeneratedId(any());
     }
 
     @Test

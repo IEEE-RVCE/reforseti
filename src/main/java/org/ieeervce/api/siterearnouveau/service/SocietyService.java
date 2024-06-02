@@ -21,7 +21,7 @@ public class SocietyService {
     }
 
     public Optional<Society> getByActualSocietyId(short societyId){
-        return societiesRepository.findByActualSocietyId(societyId);
+        return societiesRepository.findByReferenceId(societyId);
     }
 
     public Society createOrUpdate(Society society){
@@ -29,6 +29,6 @@ public class SocietyService {
     }
 
     public void deleteSociety(short societyId){
-        societiesRepository.deleteByActualSocietyId(societyId);
+        societiesRepository.deleteByReferenceId(societyId);
     }
 }

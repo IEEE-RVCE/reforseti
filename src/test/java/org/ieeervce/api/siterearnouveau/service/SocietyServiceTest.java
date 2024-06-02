@@ -39,7 +39,7 @@ class SocietyServiceTest {
 
     @Test
     void getByActualSocietyId() {
-        when(societiesRepository.findByActualSocietyId(ACTUAL_SOCIETY_ID)).thenReturn(Optional.of(society));
+        when(societiesRepository.findByReferenceId(ACTUAL_SOCIETY_ID)).thenReturn(Optional.of(society));
         var societyReturned = societyService.getByActualSocietyId(ACTUAL_SOCIETY_ID);
         assertThat(societyReturned)
                 .isNotNull()
@@ -57,7 +57,7 @@ class SocietyServiceTest {
 
     @Test
     void deleteSociety() {
-        societiesRepository.deleteByActualSocietyId(ACTUAL_SOCIETY_ID);
-        verify(societiesRepository).deleteByActualSocietyId(ACTUAL_SOCIETY_ID);
+        societiesRepository.deleteByReferenceId(ACTUAL_SOCIETY_ID);
+        verify(societiesRepository).deleteByReferenceId(ACTUAL_SOCIETY_ID);
     }
 }
