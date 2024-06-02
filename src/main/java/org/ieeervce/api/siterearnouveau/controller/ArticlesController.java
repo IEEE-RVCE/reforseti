@@ -3,6 +3,7 @@ package org.ieeervce.api.siterearnouveau.controller;
 import java.util.List;
 import java.util.Optional;
 
+import io.micrometer.core.annotation.Timed;
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.dto.article.ArticleDTO;
 import org.ieeervce.api.siterearnouveau.entity.Article;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/article")
+@Timed
 public class ArticlesController {
     private final ArticleService articleService;
     private final ModelMapper modelMapper;

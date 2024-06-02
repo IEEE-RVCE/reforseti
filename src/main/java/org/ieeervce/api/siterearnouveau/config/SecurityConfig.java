@@ -3,6 +3,8 @@ package org.ieeervce.api.siterearnouveau.config;
 import org.ieeervce.api.siterearnouveau.jwt.JWTAuthenticationFilter;
 import org.ieeervce.api.siterearnouveau.service.AuthTokenService;
 import org.ieeervce.api.siterearnouveau.service.AuthUserDetailsService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,12 +21,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-
     /**
      * Password encoder to use for decoding and encoding passwords.
      * <p>
@@ -56,10 +57,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(JWTAuthenticationFilter jwtAuthenticationFilter, HttpSecurity httpSecurity) throws Exception {
-        // FIXME re-enable cors
+    public SecurityFilterChain securityFilterChain(JWTAuthenticationFilter jwtAuthenticationFilter, HttpSecurity httpSecurity,@Qualifier("reforsetiCorsConfig") CorsConfigurationSource configurationSource) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(customizer->customizer.configurationSource(configurationSource))
                 .authorizeHttpRequests(SecurityConfig::getCustomizedHttpAuthorization)
                 .sessionManagement(SecurityConfig::customizeSessionManagement)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -70,6 +70,7 @@ public class SecurityConfig {
 
     private static void getCustomizedHttpAuthorization(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry customizer) {
         customizer
+                .requestMatchers(EndpointRequest.to("prometheus")).authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/auth").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/**").authenticated()

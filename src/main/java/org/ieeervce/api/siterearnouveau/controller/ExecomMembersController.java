@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.micrometer.core.annotation.Timed;
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.dto.execom.ExecomMemberDTO;
 import org.ieeervce.api.siterearnouveau.entity.ExecomMember;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/execom")
+@Timed
 public class ExecomMembersController {
 
     private ExecomMembersService execomMembersService;

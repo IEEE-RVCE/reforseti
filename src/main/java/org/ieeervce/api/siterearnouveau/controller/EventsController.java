@@ -2,6 +2,7 @@ package org.ieeervce.api.siterearnouveau.controller;
 
 import java.util.List;
 
+import io.micrometer.core.annotation.Timed;
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.dto.event.EventDTO;
 import org.ieeervce.api.siterearnouveau.entity.Event;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/event")
+@Timed
 public class EventsController {
     private final EventsService eventsService;
     private final ModelMapper modelMapper;
