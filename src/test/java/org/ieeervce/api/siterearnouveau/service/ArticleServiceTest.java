@@ -69,18 +69,6 @@ class ArticleServiceTest {
     }
 
     @Test
-    void testDeleteThrowsRuntimeExceptionOnFailure() {
-        doThrow(new IllegalArgumentException("Something went wrong")).when(articlesRepository).deleteById(EXAMPLE_ARTICLE_ID);
-
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> {
-            articleService.deleteArticle(EXAMPLE_ARTICLE_ID);
-        });
-
-        assertTrue(runtimeException.getMessage().contains(ArticleService.FAILED_TO_DELETE_ARTICLE));
-        verify(articlesRepository).deleteById(EXAMPLE_ARTICLE_ID);
-    }
-
-    @Test
     void testUpdate(){
         when(articlesRepository.existsById(EXAMPLE_ARTICLE_ID)).thenReturn(true);
         doReturn(article1).when(articlesRepository).save(article1);

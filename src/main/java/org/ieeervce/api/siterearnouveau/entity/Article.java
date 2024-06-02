@@ -21,13 +21,13 @@ public class Article {
     @Column(name="ecat")
     private Integer eventCategory;
 
-    @Column
+    @Column(nullable = false)
     private String author;
 
     @Column(name="adate")
     private LocalDateTime addedDateTime;
 
-    @Column
+    @Column(nullable = false)
     private String content;
 
     @Column

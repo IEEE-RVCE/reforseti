@@ -23,8 +23,9 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -164,14 +165,13 @@ class ArticlesControllerTest {
     void testDeleteArticle() throws Exception {
         Integer articleId = 1;
 
-        when(articleService.deleteArticle(articleId)).thenReturn(true);
-
         mvc.perform(
                 MockMvcRequestBuilders
                         .delete("/api/article/{articleId}",articleId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ok", Matchers.equalTo(true)))
-                .andExpect(jsonPath("$.response", Matchers.equalTo(true)));
+                .andExpect(jsonPath("$.response", nullValue()));
+        verify(articleService).deleteArticle(articleId);
     }
 
     @Test
