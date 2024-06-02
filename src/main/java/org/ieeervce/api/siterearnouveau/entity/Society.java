@@ -16,7 +16,7 @@ public class Society {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Integer societyGeneratedId;
+    private Integer generatedId;
     @Column(name = "socname", unique = true, nullable = false)
     private String societyName;
     @Column(name = "vision", nullable = false)
@@ -26,7 +26,7 @@ public class Society {
     @Column(name = "description")
     private String descriptionText;
     @Column(name = "sid", unique = true, nullable = false)
-    private short actualSocietyId;
+    private short referenceId;
     @Column(name = "is_affinity", nullable = false)
     private boolean affinity = false;
 
