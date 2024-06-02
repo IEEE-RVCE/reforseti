@@ -1,6 +1,5 @@
 package org.ieeervce.api.siterearnouveau.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ieeervce.api.siterearnouveau.dto.society.SocietyDTO;
 import org.ieeervce.api.siterearnouveau.entity.Society;
@@ -20,9 +19,11 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = SocietiesController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 class SocietiesControllerTest {
