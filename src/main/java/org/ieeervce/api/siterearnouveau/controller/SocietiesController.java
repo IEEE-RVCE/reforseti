@@ -1,5 +1,6 @@
 package org.ieeervce.api.siterearnouveau.controller;
 
+import io.micrometer.core.annotation.Timed;
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.dto.society.SocietyDTO;
 import org.ieeervce.api.siterearnouveau.entity.Society;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/society")
+@Timed
 public class SocietiesController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SocietiesController.class);
     private final SocietyService societyService;

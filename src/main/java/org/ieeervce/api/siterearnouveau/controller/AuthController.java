@@ -1,5 +1,6 @@
 package org.ieeervce.api.siterearnouveau.controller;
 
+import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpServletRequest;
 import org.ieeervce.api.siterearnouveau.auth.AuthUserDetails;
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/auth")
+@Timed
 public class AuthController {
     private final AuthenticationManager authenticationManager;
 

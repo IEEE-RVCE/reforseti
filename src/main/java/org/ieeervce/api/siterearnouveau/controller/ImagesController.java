@@ -1,5 +1,6 @@
 package org.ieeervce.api.siterearnouveau.controller;
 
+import io.micrometer.core.annotation.Timed;
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.dto.image.ImageDescriptionDTO;
 import org.ieeervce.api.siterearnouveau.entity.Image;
@@ -16,6 +17,7 @@ import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/image")
+@Timed
 public class ImagesController {
     private ImageService imageService;
     private ModelMapper modelMapper;
