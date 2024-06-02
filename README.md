@@ -11,7 +11,7 @@ Reference API Document: [api-ref.md](https://github.com/IEEE-RVCE/site-rear/blob
 
 ## Requirements
 
-- Java *17*
+- Java *17* (Hint: Use [sdkman](https://sdkman.io/) for quick setup)
 - Postgres DB
   - It **must** be database-compatible with the existing `site-rear` project. 
 - JWT-based authentication
@@ -21,8 +21,16 @@ Reference API Document: [api-ref.md](https://github.com/IEEE-RVCE/site-rear/blob
 
 - The API return shape is now more regular. Refer `ResultsDTO`
 - API verbs have been normalized. 
-  - `events` is now `event`
+  - Eg.`events` is now `event`
+- JWTs expire after some time.
+- Data field names have been updated to be more readable.
 
+## New
+
+- Basic authentication has been added.
+- Actuator - Health, Info and Metrics:
+  - Each API Endpoint (Except root) is timed
+- (Dev) Tests!
 
 ## Getting started
 
