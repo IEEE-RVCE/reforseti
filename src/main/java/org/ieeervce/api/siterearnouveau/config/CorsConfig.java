@@ -12,6 +12,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -33,36 +34,28 @@ public class CorsConfig {
     @Profile("local")
     @ConditionalOnProperty("cors.local.origin")
     CorsConfigurationSource corsConfigurationSource(@Value("${cors.local.origin}") String origin) {
-        LOGGER.info("Using local cors config, with origin={}",origin);
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin(origin);
-
-        configuration.setAllowCredentials(true);
-        configuration.addAllowedMethod("GET");
-        configuration.addAllowedMethod("POST");
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
+        List<String> originList = Collections.singletonList(origin);
+        return getUrlBasedCorsConfigurationSource(originList);
     }
+
+
 
     @Bean("reforsetiCorsConfig")
     @Profile("!local")
     CorsConfigurationSource regularCorsConfiguration() {
-        LOGGER.info("Started non-local cors config with origin={}",PRODUCTION_ALLOWED_ORIGINS);
+        return getUrlBasedCorsConfigurationSource(PRODUCTION_ALLOWED_ORIGINS);
+    }
+
+    private UrlBasedCorsConfigurationSource getUrlBasedCorsConfigurationSource(List<String> originList) {
+        LOGGER.info("Using cors config, with origins={}", originList);
         CorsConfiguration configuration = new CorsConfiguration();
 
-        PRODUCTION_ALLOWED_ORIGINS.forEach(configuration::addAllowedOrigin);
-
+        originList.forEach(configuration::addAllowedOrigin);
         configuration.setAllowCredentials(true);
-        configuration.addAllowedMethod("GET");
-        configuration.addAllowedMethod("POST");
+        configuration.applyPermitDefaultValues();
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-        LOGGER.info("Ended cors config");
-
         return source;
     }
 
