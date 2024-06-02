@@ -49,7 +49,7 @@ class SocietyServiceTest {
     @Test
     void createOrUpdate() {
         when(societiesRepository.save(society)).thenReturn(society2);
-        var createdSociety = societiesRepository.save(society);
+        var createdSociety = societyService.createOrUpdate(society);
         assertThat(createdSociety)
                 .isNotNull()
                 .isSameAs(society2);
@@ -57,7 +57,7 @@ class SocietyServiceTest {
 
     @Test
     void deleteSociety() {
-        societiesRepository.deleteByReferenceId(ACTUAL_SOCIETY_ID);
+        societyService.deleteSociety(ACTUAL_SOCIETY_ID);
         verify(societiesRepository).deleteByReferenceId(ACTUAL_SOCIETY_ID);
     }
 }
