@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ArticleService {
-    static final String FAILED_TO_DELETE_ARTICLE = "Failed to delete article";
     private final ArticlesRepository articlesRepository;
 
     public ArticleService(ArticlesRepository articlesRepository) {
@@ -29,17 +28,13 @@ public class ArticleService {
         return articlesRepository.save(article);
     }
 
-    public boolean deleteArticle(Integer id) {
-        try {
-            articlesRepository.deleteById(id);
-            return true;
-        } catch (Exception e) {
-            throw new RuntimeException(FAILED_TO_DELETE_ARTICLE, e);
-        }
+    public void deleteArticle(Integer id) {
+        articlesRepository.deleteById(id);
     }
+
     @Transactional
     public Optional<Article> editArticle(int articleId, Article article) {
-        if(articlesRepository.existsById(articleId)) {
+        if (articlesRepository.existsById(articleId)) {
             article.setArticleId(articleId);
             return Optional.of(articlesRepository.save(article));
         }

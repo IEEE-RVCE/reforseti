@@ -12,7 +12,7 @@ public class Image {
     @Id
     private Integer imageId;
 
-    @Column(name = "image")
+    @Column(name = "image", nullable = false)
     private byte[] imageBytes;
 
     @Column(name = "ecat")

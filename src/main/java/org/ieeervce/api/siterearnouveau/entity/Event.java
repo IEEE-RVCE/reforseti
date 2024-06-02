@@ -20,10 +20,10 @@ public class Event {
     @Id
     private int eventId;
 
-    @Column(name = "ename")
+    @Column(name = "ename", nullable = false)
     private String eventName;
 
-    @Column(name = "eventstart")
+    @Column(name = "eventstart", nullable = false)
     private LocalDateTime eventStartTime;
 
     @Column(name = "eventend")
@@ -34,6 +34,9 @@ public class Event {
 
     @Column(name = "pubend")
     private LocalDateTime publicityEndTime;
+
+    @Column(name = "details", nullable = false)
+    private String details;
 
     @Column(name = "feeno")
     private Integer feeNotIEEEMember;

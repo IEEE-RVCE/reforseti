@@ -49,9 +49,9 @@ public class ArticlesController {
     }
 
     @DeleteMapping("/{id}")
-    ResultsDTO<Boolean> deleteArticle(@PathVariable("id") Integer id) {
-        boolean result = articleService.deleteArticle(id);
-        return new ResultsDTO<>(result);
+    ResultsDTO<Void> deleteArticle(@PathVariable("id") Integer id) {
+        articleService.deleteArticle(id);
+        return new ResultsDTO<>(null);
     }
 
 }
