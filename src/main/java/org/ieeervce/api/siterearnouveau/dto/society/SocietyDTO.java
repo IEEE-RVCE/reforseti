@@ -10,6 +10,6 @@ public class SocietyDTO {
     private String vision;
     private String mission;
     private String descriptionText;
-    private short actualSocietyId;
+    private short referenceId;
     private boolean affinity;
 }
