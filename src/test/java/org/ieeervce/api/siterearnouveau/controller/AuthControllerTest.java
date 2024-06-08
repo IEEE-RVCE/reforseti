@@ -3,6 +3,7 @@ package org.ieeervce.api.siterearnouveau.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ieeervce.api.siterearnouveau.auth.AuthUserDetails;
+import org.ieeervce.api.siterearnouveau.controller.error.ExceptionControllerAdvice;
 import org.ieeervce.api.siterearnouveau.dto.auth.UsernamePasswordDTO;
 import org.ieeervce.api.siterearnouveau.entity.AuthToken;
 import org.ieeervce.api.siterearnouveau.entity.User;
@@ -15,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,11 +24,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -52,13 +56,16 @@ class AuthControllerTest {
     @InjectMocks
     AuthController authController;
 
+    @InjectMocks
+    ExceptionControllerAdvice exceptionControllerAdvice;
+
     MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
         usernamePasswordDTO.setUserId(EXAMPLE_USER_ID);
         usernamePasswordDTO.setPassword(EXAMPLE_USER_PASSWORD);
-        mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(authController).setControllerAdvice(exceptionControllerAdvice).build();
     }
 
     @Test
@@ -76,8 +83,8 @@ class AuthControllerTest {
                         .content(toJsonBytes(usernamePasswordDTO))
                         .requestAttr(JWTAuthenticationFilter.AUTH_JWT_REQUEST_ATTRIBUTE, EXAMPLE_JWT))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.ok", equalTo(true)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.response",equalTo(EXAMPLE_JWT)));
+                .andExpect(jsonPath("$.ok", equalTo(true)))
+                .andExpect(jsonPath("$.response",equalTo(EXAMPLE_JWT)));
     }
 
     @Test
@@ -89,8 +96,24 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJsonBytes(usernamePasswordDTO))
                         .requestAttr(JWTAuthenticationFilter.AUTH_JWT_REQUEST_ATTRIBUTE, EXAMPLE_JWT))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.ok", equalTo(false)));
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andExpect(jsonPath("$.ok", equalTo(false)))
+                .andExpect(jsonPath("$.message",equalTo("Failed to log in")))
+                .andExpect(jsonPath("$.response", nullValue()));
+    }
+
+    @Test
+    void loginWithoutGoodCredentialsAndAuthFailure() throws Exception {
+        when(authenticationManager.authenticate(any())).thenThrow(new AuthenticationCredentialsNotFoundException("User does not exist"));
+        mockMvc
+                .perform(post("/api/auth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJsonBytes(usernamePasswordDTO))
+                        .requestAttr(JWTAuthenticationFilter.AUTH_JWT_REQUEST_ATTRIBUTE, EXAMPLE_JWT))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andExpect(jsonPath("$.ok", equalTo(false)))
+                .andExpect(jsonPath("$.message",equalTo("Failed to log in")))
+                .andExpect(jsonPath("$.response", nullValue()));
     }
 
     @Test
@@ -98,7 +121,7 @@ class AuthControllerTest {
         mockMvc
                 .perform(delete("/api/auth").requestAttr(JWTAuthenticationFilter.AUTH_JWT_REQUEST_ATTRIBUTE, EXAMPLE_JWT))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.ok", equalTo(true)));
+                .andExpect(jsonPath("$.ok", equalTo(true)));
         verify(authTokenService).remove(EXAMPLE_JWT);
 
     }

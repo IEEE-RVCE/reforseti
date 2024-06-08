@@ -7,11 +7,15 @@ import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.dto.auth.UsernamePasswordDTO;
 import org.ieeervce.api.siterearnouveau.entity.AuthToken;
 import org.ieeervce.api.siterearnouveau.entity.User;
+import org.ieeervce.api.siterearnouveau.exception.LoginFailedException;
 import org.ieeervce.api.siterearnouveau.jwt.JWTAuthenticationFilter;
 import org.ieeervce.api.siterearnouveau.service.AuthTokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -21,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 @Timed
 public class AuthController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+    static final String FAILED_TO_LOG_IN = "Failed to log in";
     private final AuthenticationManager authenticationManager;
 
     private final AuthTokenService authTokenService;
@@ -37,17 +43,20 @@ public class AuthController {
      * @return Token if valid
      */
     @PostMapping
-    ResultsDTO<String> login(@RequestBody UsernamePasswordDTO usernamePasswordDTO) {
-        // FIXME handle .authenticate Exceptions
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(usernamePasswordDTO.getUserId(), usernamePasswordDTO.getPassword()));
-        if (authentication.isAuthenticated()) {
-            AuthUserDetails authUserDetails = (AuthUserDetails) authentication.getPrincipal();
-            User user = authUserDetails.getUser();
-            AuthToken authToken = authTokenService.create(user);
-            return new ResultsDTO<>(authToken.getToken());
-        } else {
-            return new ResultsDTO<>(false, null, "Wrong auth");
+    ResultsDTO<String> login(@RequestBody UsernamePasswordDTO usernamePasswordDTO) throws LoginFailedException {
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(usernamePasswordDTO.getUserId(), usernamePasswordDTO.getPassword()));
+            if (authentication.isAuthenticated()) {
+                AuthUserDetails authUserDetails = (AuthUserDetails) authentication.getPrincipal();
+                User user = authUserDetails.getUser();
+                AuthToken authToken = authTokenService.create(user);
+                return new ResultsDTO<>(authToken.getToken());
+            }
+        } catch (AuthenticationException exception) {
+            LOGGER.debug("Login failed for user={}",usernamePasswordDTO.getUserId(),exception);
         }
+        LOGGER.info("Login failed for user={}",usernamePasswordDTO.getUserId());
+        throw new LoginFailedException(FAILED_TO_LOG_IN);
     }
 
     @DeleteMapping
