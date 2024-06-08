@@ -19,11 +19,11 @@ Reference API Document: [api-ref.md](https://github.com/IEEE-RVCE/site-rear/blob
 
 ## Key differences
 
-- The API return shape is now more regular. Refer `ResultsDTO`
+- API field names have been updated and API shape has been normalized.
+  - This is just the consequence of using a strongly typed language.
 - API verbs have been normalized. 
   - Eg.`events` is now `event`
 - JWTs expire after some time.
-- Data field names have been updated to be more readable.
 
 ## New
 
@@ -57,4 +57,3 @@ Reference API Document: [api-ref.md](https://github.com/IEEE-RVCE/site-rear/blob
 ## Current Implementation Notes ~~Hacks~~
 
 - JWT and Basic auth supported
-- CORS is disabled.

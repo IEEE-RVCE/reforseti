@@ -1,27 +1,32 @@
 package org.ieeervce.api.siterearnouveau.dto.auth;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.lang.NonNull;
 
 @Data
 @NoArgsConstructor
 public class UserRegistrationDTO {
-    @NonNull
+    @NotNull
+    @Min(100_000)
     private Integer userId;
-    @NonNull
+    @NotNull
     private Integer societyId;
-    @NonNull
+    @NotBlank
     private String firstName;
 
-    @NonNull
+    @NotNull
     private String lastName;
     @Email
+    @NotBlank
     private String email;
     @Length(min = 6, max=127)
+    @NotNull
     private String password;
-    @NonNull
+    @NotBlank
     private String role;
 }

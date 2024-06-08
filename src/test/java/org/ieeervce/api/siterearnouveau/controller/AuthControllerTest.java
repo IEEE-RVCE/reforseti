@@ -47,7 +47,7 @@ class AuthControllerTest {
     public static final String EXAMPLE_JWT = "example_jwt";
     public static final String EXAMPLE_USER_ID = "1234";
     public static final String EXAMPLE_USER_PASSWORD = "pass";
-    public static final int USER_ID = 1234;
+    public static final int USER_ID = 12345678;
     ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     AuthenticationManager authenticationManager;

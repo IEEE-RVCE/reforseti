@@ -89,9 +89,9 @@ class AuthUserDetailsServiceTest {
     }
 
     private User getMockUserWithUserId() {
-        User user = new User();
-        user.setUserId(USER_ID);
-        return user;
+        User mockUser = new User();
+        mockUser.setUserId(USER_ID);
+        return mockUser;
     }
 
 
