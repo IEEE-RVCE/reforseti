@@ -20,6 +20,7 @@ class UsersRepositoryTest {
     private static final String LASTNAME = "CDE";
     private static final String FIRSTNAME = "ABC";
     private static final String EMAIL = "abc@example.com";
+    public static final int USER_ID = 10;
     @Autowired
     UsersRepository usersRepository;
 
@@ -27,6 +28,7 @@ class UsersRepositoryTest {
     @Transactional
     void saveUserWorks() {
         var user = new User();
+        user.setUserId(USER_ID);
         user.setEmail(EMAIL);
         user.setFirstName(FIRSTNAME);
         user.setLastName(LASTNAME);
@@ -35,9 +37,9 @@ class UsersRepositoryTest {
         user.setSocietyId(null);
         user.setPassword(PASSWORD);
 
-        var createdUser = usersRepository.save(user);
+        User createdUser = usersRepository.save(user);
 
-        assertThat(createdUser.getUserId()).isNotNull().isInstanceOf(Integer.class);
+        assertThat(createdUser.getUserId()).isNotNull().isInstanceOf(Integer.class).isEqualTo(USER_ID);
         assertThat(createdUser.getEmail()).isEqualTo(EMAIL);
         assertThat(createdUser.getFirstName()).isEqualTo(FIRSTNAME);
         assertThat(createdUser.getLastName()).isEqualTo(LASTNAME);
