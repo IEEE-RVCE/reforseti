@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.ieeervce.api.siterearnouveau.auth.AuthUserDetails;
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.dto.auth.UserRegistrationDTO;
+import org.ieeervce.api.siterearnouveau.dto.auth.UserRegistrationResponseDTO;
 import org.ieeervce.api.siterearnouveau.dto.auth.UsernamePasswordDTO;
 import org.ieeervce.api.siterearnouveau.entity.AuthToken;
 import org.ieeervce.api.siterearnouveau.entity.User;
@@ -78,14 +79,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    ResultsDTO<UserRegistrationDTO> register(@RequestBody @Valid UserRegistrationDTO userRegistrationDTO) throws DataExistsException {
+    ResultsDTO<UserRegistrationResponseDTO> register(@RequestBody @Valid UserRegistrationDTO userRegistrationDTO) throws DataExistsException {
         User user = modelMapper.map(userRegistrationDTO,User.class);
         String encodedPassword = passwordEncoder.encode(userRegistrationDTO.getPassword());
         user.setPassword(encodedPassword);
         user.setPicture(new byte[0]);
         LOGGER.debug("Finished password encode for new user={}",user.getUserId());
         authUserDetailsService.createIfNotExists(user);
-        return new ResultsDTO<>(userRegistrationDTO);
+        return new ResultsDTO<>(new UserRegistrationResponseDTO(user.getUserId()));
     }
 }
 

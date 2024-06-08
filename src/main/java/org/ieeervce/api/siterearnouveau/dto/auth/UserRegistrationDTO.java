@@ -2,10 +2,12 @@ package org.ieeervce.api.siterearnouveau.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.lang.NonNull;
 
 @Data
+@NoArgsConstructor
 public class UserRegistrationDTO {
     @NonNull
     private Integer userId;
