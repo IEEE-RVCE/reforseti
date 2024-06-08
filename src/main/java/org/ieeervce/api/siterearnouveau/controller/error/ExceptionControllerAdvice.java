@@ -1,6 +1,7 @@
 package org.ieeervce.api.siterearnouveau.controller.error;
 
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
+import org.ieeervce.api.siterearnouveau.exception.DataExistsException;
 import org.ieeervce.api.siterearnouveau.exception.DataNotFoundException;
 import org.ieeervce.api.siterearnouveau.exception.LoginFailedException;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ public class ExceptionControllerAdvice {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionControllerAdvice.class);
 
 
-    @ExceptionHandler({LoginFailedException.class, DataNotFoundException.class})
+    @ExceptionHandler({LoginFailedException.class, DataNotFoundException.class, DataExistsException.class})
     public ResponseEntity<ResultsDTO<Void>> loginErrorHandler(Exception exception) {
         HttpStatus status = getStatusFromClassAnnotation(exception);
         return ResponseEntity

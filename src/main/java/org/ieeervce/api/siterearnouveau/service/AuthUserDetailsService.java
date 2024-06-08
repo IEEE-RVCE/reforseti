@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import org.ieeervce.api.siterearnouveau.auth.AuthUserDetails;
 import org.ieeervce.api.siterearnouveau.entity.User;
+import org.ieeervce.api.siterearnouveau.exception.DataExistsException;
 import org.ieeervce.api.siterearnouveau.repository.UsersRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,5 +35,10 @@ public class AuthUserDetailsService implements UserDetailsService {
 
 		return new AuthUserDetails(user);
 	}
-
+	public User createIfNotExists(User user) throws DataExistsException {
+		if(usersRepository.existsById(user.getUserId())){
+			throw new DataExistsException("User already exists");
+		}
+		return usersRepository.save(user);
+	}
 }

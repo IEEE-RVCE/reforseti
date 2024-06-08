@@ -1,5 +1,6 @@
 package org.ieeervce.api.siterearnouveau.controller.error;
 
+import org.ieeervce.api.siterearnouveau.exception.DataExistsException;
 import org.ieeervce.api.siterearnouveau.exception.DataNotFoundException;
 import org.ieeervce.api.siterearnouveau.exception.LoginFailedException;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,6 +48,15 @@ class ExceptionControllerAdviceTest {
                 .andExpect(jsonPath("$.response", nullValue()));
     }
 
+    @Test
+    void testDataExists() throws Exception {
+        mockMvc.perform(get("/exists"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.ok", equalTo(false)))
+                .andExpect(jsonPath("$.response", nullValue()))
+                .andExpect(jsonPath("$.message",equalTo("Data exists")));
+    }
+
     @RestController
     private static class ExampleController {
         @GetMapping("/notfound1")
@@ -57,6 +67,11 @@ class ExceptionControllerAdviceTest {
         @GetMapping("/loginerror")
         void loginerror() throws LoginFailedException {
             throw new LoginFailedException("Failed");
+        }
+
+        @GetMapping("/exists")
+        void exists() throws DataExistsException {
+            throw new DataExistsException("Data exists");
         }
 
     }

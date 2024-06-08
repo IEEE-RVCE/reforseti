@@ -2,20 +2,26 @@ package org.ieeervce.api.siterearnouveau.controller;
 
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.ieeervce.api.siterearnouveau.auth.AuthUserDetails;
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
+import org.ieeervce.api.siterearnouveau.dto.auth.UserRegistrationDTO;
 import org.ieeervce.api.siterearnouveau.dto.auth.UsernamePasswordDTO;
 import org.ieeervce.api.siterearnouveau.entity.AuthToken;
 import org.ieeervce.api.siterearnouveau.entity.User;
+import org.ieeervce.api.siterearnouveau.exception.DataExistsException;
 import org.ieeervce.api.siterearnouveau.exception.LoginFailedException;
 import org.ieeervce.api.siterearnouveau.jwt.JWTAuthenticationFilter;
 import org.ieeervce.api.siterearnouveau.service.AuthTokenService;
+import org.ieeervce.api.siterearnouveau.service.AuthUserDetailsService;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -28,12 +34,17 @@ public class AuthController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
     static final String FAILED_TO_LOG_IN = "Failed to log in";
     private final AuthenticationManager authenticationManager;
-
     private final AuthTokenService authTokenService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthUserDetailsService authUserDetailsService;
+    private final ModelMapper modelMapper;
 
-    public AuthController(AuthenticationManager authenticationManager, AuthTokenService authTokenService) {
+    public AuthController(AuthenticationManager authenticationManager, AuthTokenService authTokenService, PasswordEncoder passwordEncoder, AuthUserDetailsService authUserDetailsService, ModelMapper modelMapper) {
         this.authenticationManager = authenticationManager;
         this.authTokenService = authTokenService;
+        this.passwordEncoder = passwordEncoder;
+        this.authUserDetailsService = authUserDetailsService;
+        this.modelMapper = modelMapper;
     }
 
     /**
@@ -64,6 +75,17 @@ public class AuthController {
         String jwtToken = (String) httpServletRequest.getAttribute(JWTAuthenticationFilter.AUTH_JWT_REQUEST_ATTRIBUTE);
         authTokenService.remove(jwtToken);
         return new ResultsDTO<>(null);
+    }
+
+    @PostMapping("/register")
+    ResultsDTO<UserRegistrationDTO> register(@RequestBody @Valid UserRegistrationDTO userRegistrationDTO) throws DataExistsException {
+        User user = modelMapper.map(userRegistrationDTO,User.class);
+        String encodedPassword = passwordEncoder.encode(userRegistrationDTO.getPassword());
+        user.setPassword(encodedPassword);
+        user.setPicture(new byte[0]);
+        LOGGER.debug("Finished password encode for new user={}",user.getUserId());
+        authUserDetailsService.createIfNotExists(user);
+        return new ResultsDTO<>(userRegistrationDTO);
     }
 }
 
