@@ -17,7 +17,8 @@ import org.springframework.stereotype.Service;
 public class AuthUserDetailsService implements UserDetailsService {
 	private static final Supplier<UsernameNotFoundException> EXCEPTION_SUPPLIER = () -> new UsernameNotFoundException(
 			"Username not found");
-	private UsersRepository usersRepository;
+	static final String USER_ALREADY_EXISTS = "User already exists";
+	private final UsersRepository usersRepository;
 
 	public AuthUserDetailsService(UsersRepository usersRepository) {
 		this.usersRepository = usersRepository;
@@ -37,7 +38,7 @@ public class AuthUserDetailsService implements UserDetailsService {
 	}
 	public User createIfNotExists(User user) throws DataExistsException {
 		if(usersRepository.existsById(user.getUserId())){
-			throw new DataExistsException("User already exists");
+			throw new DataExistsException(USER_ALREADY_EXISTS);
 		}
 		return usersRepository.save(user);
 	}
