@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 public class UserRegistrationDTO {
     @NotNull
-    @Min(99_999)
+    @Min(100_000)
     private Integer userId;
     @NotNull
     private Integer societyId;
