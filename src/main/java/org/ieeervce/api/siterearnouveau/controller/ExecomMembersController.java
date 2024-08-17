@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.micrometer.core.annotation.Timed;
+import jakarta.validation.Valid;
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.dto.execom.ExecomMemberDTO;
 import org.ieeervce.api.siterearnouveau.entity.ExecomMember;
@@ -61,13 +62,13 @@ public class ExecomMembersController {
 
     @PutMapping("/{execomId}")
     public ResultsDTO<ExecomMember> updateMember(@PathVariable int execomId,
-            @RequestBody ExecomMemberDTO execomMemberDTO) {
+            @RequestBody @Valid ExecomMemberDTO execomMemberDTO) {
         ExecomMember execomMember = modelMapper.map(execomMemberDTO, ExecomMember.class);
         return new ResultsDTO<>(execomMembersService.updateExecomMember(execomId, execomMember));
     }
 
     @PostMapping("")
-    public ResultsDTO<ExecomMember> createMember(@RequestBody ExecomMemberDTO execomMemberDTO) {
+    public ResultsDTO<ExecomMember> createMember(@RequestBody @Valid ExecomMemberDTO execomMemberDTO) {
         ExecomMember newExecomMember = modelMapper.map(execomMemberDTO, ExecomMember.class);
         return new ResultsDTO<>(execomMembersService.create(newExecomMember));
     }

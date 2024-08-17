@@ -3,6 +3,7 @@ package org.ieeervce.api.siterearnouveau.controller;
 import java.util.List;
 
 import io.micrometer.core.annotation.Timed;
+import jakarta.validation.Valid;
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.dto.event.EventDTO;
 import org.ieeervce.api.siterearnouveau.entity.Event;
@@ -47,13 +48,13 @@ public class EventsController {
     }
 
     @PostMapping
-    public ResultsDTO<Event> create(@RequestBody EventDTO eventDTO){
+    public ResultsDTO<Event> create(@RequestBody @Valid EventDTO eventDTO){
         Event event = modelMapper.map(eventDTO,Event.class);
         return new ResultsDTO<>(eventsService.createOrUpdate(event));
     }
 
     @PutMapping("/{eventId}")
-    public ResultsDTO<Event> update(@PathVariable int eventId, @RequestBody EventDTO eventDTO){
+    public ResultsDTO<Event> update(@PathVariable int eventId, @RequestBody @Valid EventDTO eventDTO){
         Event event = modelMapper.map(eventDTO,Event.class);
         event.setEventId(eventId);
         return new ResultsDTO<>(eventsService.createOrUpdate(event));

@@ -55,7 +55,7 @@ public class AuthController {
      * @return Token if valid
      */
     @PostMapping
-    ResultsDTO<String> login(@RequestBody UsernamePasswordDTO usernamePasswordDTO) throws LoginFailedException {
+    ResultsDTO<String> login(@RequestBody @Valid UsernamePasswordDTO usernamePasswordDTO) throws LoginFailedException {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(usernamePasswordDTO.getUserId(), usernamePasswordDTO.getPassword()));
             if (authentication.isAuthenticated()) {
