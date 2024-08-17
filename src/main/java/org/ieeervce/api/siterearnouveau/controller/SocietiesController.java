@@ -1,6 +1,7 @@
 package org.ieeervce.api.siterearnouveau.controller;
 
 import io.micrometer.core.annotation.Timed;
+import jakarta.validation.Valid;
 import org.ieeervce.api.siterearnouveau.dto.ResultsDTO;
 import org.ieeervce.api.siterearnouveau.dto.society.SocietyDTO;
 import org.ieeervce.api.siterearnouveau.entity.Society;
@@ -39,14 +40,14 @@ public class SocietiesController {
     }
 
     @PostMapping()
-    public ResultsDTO<Society> create(@RequestBody SocietyDTO societyDTO){
+    public ResultsDTO<Society> create(@RequestBody @Valid SocietyDTO societyDTO){
         Society society = modelMapper.map(societyDTO, Society.class);
         Society createdSociety = societyService.createOrUpdate(society);
         LOGGER.info("Created new society={}",createdSociety);
         return new ResultsDTO<>(createdSociety);
     }
     @PutMapping("/{sid}")
-    public ResultsDTO<Society> update(@PathVariable("sid") short societyId,@RequestBody SocietyDTO societyDTO) throws DataNotFoundException {
+    public ResultsDTO<Society> update(@PathVariable("sid") short societyId,@RequestBody @Valid SocietyDTO societyDTO) throws DataNotFoundException {
         Society society = societyService.getByActualSocietyId(societyId).orElseThrow(DataNotFoundException::new);
         modelMapper.map(societyDTO,society);
         Society updatedSociety = societyService.createOrUpdate(society);
