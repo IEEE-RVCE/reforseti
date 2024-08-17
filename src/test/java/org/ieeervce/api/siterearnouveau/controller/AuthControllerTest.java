@@ -67,6 +67,7 @@ class AuthControllerTest {
     PasswordEncoder passwordEncoder;
     @Mock
     AuthUserDetailsService authUserDetailsService;
+    @Spy
     UsernamePasswordDTO usernamePasswordDTO = new UsernamePasswordDTO();
 
     @InjectMocks
@@ -101,6 +102,18 @@ class AuthControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ok", equalTo(true)))
                 .andExpect(jsonPath("$.response", equalTo(EXAMPLE_JWT)));
+    }
+    @Test
+    void loginWithInvalidCredentialsTooShortThrows400() throws Exception {
+        usernamePasswordDTO.setPassword("short");
+        usernamePasswordDTO.setUserId("short");
+        mockMvc
+                .perform(post("/api/auth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJsonBytes(usernamePasswordDTO))
+                        .requestAttr(JWTAuthenticationFilter.AUTH_JWT_REQUEST_ATTRIBUTE, EXAMPLE_JWT))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.ok", equalTo(false)));
     }
 
     @Test
