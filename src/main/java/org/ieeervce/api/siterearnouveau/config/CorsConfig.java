@@ -34,6 +34,7 @@ public class CorsConfig {
     @Profile("local")
     @ConditionalOnProperty("cors.local.origin")
     CorsConfigurationSource corsConfigurationSource(@Value("${cors.local.origin}") String origin) {
+        LOGGER.debug("Configuring local cors override origin={}",origin);
         List<String> originList = Collections.singletonList(origin);
         return getUrlBasedCorsConfigurationSource(originList);
     }
