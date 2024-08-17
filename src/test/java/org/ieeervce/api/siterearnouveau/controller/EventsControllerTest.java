@@ -146,11 +146,7 @@ class EventsControllerTest {
     void testCreateGives400OnInvalidArgs() throws Exception {
         EventDTO newEventDTO = getExpectedResponseEventWithoutId();
         newEventDTO.setReglink(null);
-        Event requestedEventEntityToSave = modelMapper.map(getExpectedResponseEventWithoutId(),Event.class);
-        Event createdData = modelMapper.map(getExpectedResponseEventWithoutId(),Event.class);
-        createdData.setEventId(EVENT_ID);
 
-        when(eventsService.createOrUpdate(requestedEventEntityToSave)).thenReturn(createdData);
         String requestContent = objectMapper.writeValueAsString(newEventDTO);
         mvc.perform(post("/api/event").content(requestContent).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
