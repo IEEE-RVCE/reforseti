@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Length;
 public class UserRegistrationDTO {
     @NotNull
     @Min(100_000)
-    @Max(1_000_000)
+    @Max(10_00_00_000)
     private Integer userId;
     @NotNull
     private Integer societyId;
