@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UsernamePasswordDTO {
     @NotBlank
-    @Size(min = 6, max = 7)
+    @Size(min = 6, max = 9)
     private String userId;
     @NotBlank
-    @Size(min = 6)
+    @Size(min = 6, max = 127)
     private String password;
 }
