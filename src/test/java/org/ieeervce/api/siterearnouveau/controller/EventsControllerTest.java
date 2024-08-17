@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -134,11 +135,25 @@ class EventsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ok",equalTo(true)))
                 .andExpect(jsonPath("$.response.eventId",equalTo(EVENT_ID)))
+                .andExpect(jsonPath("$.message",nullValue()))
                 .andExpect(jsonPath("$.response.eventName",equalTo(EVENT_NAME)))
                 .andExpect(jsonPath("$.response.hosts",iterableWithSize(1)))
                 .andExpect(jsonPath("$.response.hosts[0].piclink",equalTo(HOST_PICTURE_LINK)))
                 .andExpect(jsonPath("$.response.hosts[0].details",equalTo(HOST_DETAILS)))
                 .andExpect(jsonPath("$.response.hosts[0].name",equalTo(HOST_NAME)));
+    }
+    @Test
+    void testCreateGives400OnInvalidArgs() throws Exception {
+        EventDTO newEventDTO = getExpectedResponseEventWithoutId();
+        newEventDTO.setReglink(null);
+        Event requestedEventEntityToSave = modelMapper.map(getExpectedResponseEventWithoutId(),Event.class);
+        Event createdData = modelMapper.map(getExpectedResponseEventWithoutId(),Event.class);
+        createdData.setEventId(EVENT_ID);
+
+        when(eventsService.createOrUpdate(requestedEventEntityToSave)).thenReturn(createdData);
+        String requestContent = objectMapper.writeValueAsString(newEventDTO);
+        mvc.perform(post("/api/event").content(requestContent).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -164,14 +179,22 @@ class EventsControllerTest {
     }
 
     private EventDTO getExpectedResponseEventWithoutId() {
-
         EventDTO result = new EventDTO();
         result.setEventName(EVENT_NAME);
         result.setEventCategory(EVENT_CATEGORY);
         result.setEventStartTime(LocalDateTime.MIN);
         result.setEventEndTime(LocalDateTime.MAX);
+        result.setPublicityStartTime(LocalDateTime.MIN);
+        result.setPublicityEndTime(LocalDateTime.MAX);
         result.setKeywords(KEYWORDS);
         result.setHosts(Collections.singletonList(getHost()));
+        result.setBrochurelink(HOST_PICTURE_LINK);
+        result.setSmallposterlink(HOST_PICTURE_LINK);
+        result.setLargeposterlink(HOST_PICTURE_LINK);
+        result.setFeeIEEEMember(500);
+        result.setFeeNotIEEEMember(2500);
+        result.setReglink(HOST_PICTURE_LINK);
+
         return result;
     }
 
