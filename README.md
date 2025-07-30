@@ -2,7 +2,8 @@
 
 An adventure in Java. A reimplementation of `site-rear` in Java, Springboot.
 
-Note: This is intended to replace the current API Server.
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=IEEE-RVCE_reforseti&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=IEEE-RVCE_reforseti)
+
 Reference API Document: [api-ref.md](https://github.com/IEEE-RVCE/site-rear/blob/master/docs/api-ref.md)
 ## Aims
 
